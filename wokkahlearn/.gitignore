@@ -1,0 +1,11 @@
+.env
+migrations/
+__pycache__/
+migrations/
+.env.development
+.env.accounts
+media/
+static/
+e2e/
+scripts/
+staticfiles/
