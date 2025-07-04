@@ -1,0 +1,67 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Verify Your Email - WokkahLearn{% endblock %}
+
+{% block header %}🚀 Welcome to WokkahLearn!{% endblock %}
+
+{% block subtitle %}Your coding journey starts here{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 64px; margin-bottom: 16px;">🎯</div>
+        <h2 style="color: #2d3748; margin-bottom: 8px;">Hi {{ user.first_name|default:user.username }}!</h2>
+        <p style="color: #718096; font-size: 18px; margin: 0;">Just one more step to unlock your potential</p>
+    </div>
+    
+    <div class="highlight-box" style="text-align: center;">
+        <h3 style="margin-bottom: 16px;">🌟 You're Almost Ready!</h3>
+        <p style="color: rgba(255,255,255,0.9); font-size: 16px; margin-bottom: 0;">
+            Welcome to <strong>WokkahLearn</strong> – where developers level up their skills with AI-powered learning experiences!
+        </p>
+    </div>
+    
+    <p style="font-size: 16px; text-align: center; margin: 24px 0;">
+        To activate your account and start your coding adventure, please verify your email address:
+    </p>
+    
+    <div style="text-align: center; margin: 32px 0;">
+        <a href="{{ verification_url }}" class="cta-button">
+            ✨ Verify Email Address
+        </a>
+    </div>
+    
+    <div class="feature-list">
+        <h3>🎁 What's waiting for you:</h3>
+        <ul>
+            <li><strong>Interactive Coding Courses</strong> - Learn by doing with hands-on projects</li>
+            <li><strong>AI-Powered Assistant</strong> - Get instant help and code reviews</li>
+            <li><strong>Live Coding Sessions</strong> - Collaborate with developers worldwide</li>
+            <li><strong>Progress Tracking</strong> - Earn badges and celebrate milestones</li>
+        </ul>
+    </div>
+    
+    <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin: 24px 0; border-left: 4px solid #f093fb; text-align: center;">
+        <p style="margin: 0; color: #4a5568; font-size: 14px;">
+            <strong>🔗 Can't click the button?</strong><br>
+            Copy and paste this link: <br>
+            <span style="background: #e2e8f0; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 13px; word-break: break-all;">{{ verification_url }}</span>
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 32px; padding: 20px; background: linear-gradient(135deg, #fef5e7 0%, #fef9c3 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+        <p style="margin: 0; color: #92400e; font-size: 14px;">
+            ⏰ <strong>This verification link expires in 24 hours</strong><br>
+            Make sure to verify soon to keep your account secure!
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 32px;">
+        <p style="color: #718096; font-size: 14px; margin: 8px 0;">
+            Need help? We're here for you! 
+        </p>
+        <p style="margin: 0;">
+            <a href="mailto:support@wokkahlearn.com" style="color: #667eea; text-decoration: none; font-weight: 600;">📧 Contact Support</a> • 
+            <a href="{{ frontend_url }}/help" style="color: #667eea; text-decoration: none; font-weight: 600;">❓ Help Center</a>
+        </p>
+    </div>
+{% endblock %}

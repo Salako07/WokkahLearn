@@ -9,3 +9,13 @@ static/
 e2e/
 scripts/
 staticfiles/
+docker-compose.yml
+docker-compose.development.yml
+django_diagnose.py
+mailgun.py
+requirements_test.txt
+test_runner.py
+wokkahlearn.log
+flow_test.py
+folder_structure
+frontend/

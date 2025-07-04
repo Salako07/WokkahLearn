@@ -1,0 +1,44 @@
+🚀 WELCOME TO WOKKAHLEARN! 🚀
+
+Hi {{ user.first_name|default:user.username }}!
+
+🎯 You're just one step away from unlocking your coding potential!
+
+Welcome to WokkahLearn – where developers level up their skills with AI-powered learning experiences! We're absolutely thrilled to have you join our community of passionate coders.
+
+✨ VERIFY YOUR EMAIL ADDRESS ✨
+
+To activate your account and start your coding adventure, please click the link below:
+
+{{ verification_url }}
+
+🎁 WHAT'S WAITING FOR YOU:
+
+📚 Interactive Coding Courses - Learn by doing with hands-on projects
+🤖 AI-Powered Assistant - Get instant help and code reviews  
+👥 Live Coding Sessions - Collaborate with developers worldwide
+🏆 Progress Tracking - Earn badges and celebrate milestones
+
+⏰ IMPORTANT: This verification link expires in 24 hours.
+Make sure to verify soon to keep your account secure!
+
+❓ NEED HELP?
+
+We're here for you! If you have any questions or need assistance:
+
+📧 Email: support@wokkahlearn.com
+🌐 Help Center: {{ frontend_url }}/help
+
+If you didn't create an account with WokkahLearn, please ignore this email.
+
+Happy coding! 💻✨
+The WokkahLearn Team
+
+---
+© 2025 WokkahLearn. All rights reserved.
+Master coding with AI-powered learning
+
+🐦 Twitter | 💼 LinkedIn | 🐙 GitHub | 💬 Discord
+
+Unsubscribe: {{ unsubscribe_url }}
+Update Preferences: {{ preferences_url }}

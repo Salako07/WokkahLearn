@@ -1,0 +1,152 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Welcome to WokkahLearn! 🎉{% endblock %}
+
+{% block header %}🎉 Account Verified!{% endblock %}
+
+{% block subtitle %}Your learning adventure begins now{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin-bottom: 32px;">
+        <div style="font-size: 72px; margin-bottom: 16px; animation: bounce 2s infinite;">🚀</div>
+        <h2 style="color: #2d3748; font-size: 28px; margin-bottom: 12px;">Welcome aboard, {{ user.first_name|default:user.username }}!</h2>
+        <p style="color: #718096; font-size: 18px; margin: 0; line-height: 1.5;">
+            Your email has been successfully verified and your <br>
+            <strong style="color: #667eea;">WokkahLearn</strong> account is now <span style="color: #48bb78; font-weight: 600;">active</span>! 🎯
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin: 40px 0;">
+        <a href="{{ login_url }}" class="cta-button">
+            🚀 Start Learning Now
+        </a>
+    </div>
+    
+    <div class="highlight-box">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; color: white; font-size: 22px;">🎯 Your Learning Journey Starts Here</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
+            <div style="text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 8px;">📚</div>
+                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; font-weight: 600;">Extensive Course Library</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 8px;">🤖</div>
+                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; font-weight: 600;">AI-Powered Assistance</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; font-weight: 600;">Collaborative Sessions</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 8px;">🏆</div>
+                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; font-weight: 600;">Progress Tracking</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="feature-list">
+        <h3>🔥 Popular Starting Points</h3>
+        <div style="display: grid; gap: 12px;">
+            <div style="display: flex; align-items: center; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="font-size: 24px; margin-right: 12px;">🐍</div>
+                <div>
+                    <strong style="color: #2d3748; font-size: 16px;">Python Fundamentals</strong>
+                    <p style="color: #718096; font-size: 14px; margin: 4px 0 0 0;">Perfect for beginners - build your first apps</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="font-size: 24px; margin-right: 12px;">⚡</div>
+                <div>
+                    <strong style="color: #2d3748; font-size: 16px;">JavaScript Essentials</strong>
+                    <p style="color: #718096; font-size: 14px; margin: 4px 0 0 0;">Build interactive web applications</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="font-size: 24px; margin-right: 12px;">🧠</div>
+                <div>
+                    <strong style="color: #2d3748; font-size: 16px;">Data Structures & Algorithms</strong>
+                    <p style="color: #718096; font-size: 14px; margin: 4px 0 0 0;">Master problem-solving techniques</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="font-size: 24px; margin-right: 12px;">🌐</div>
+                <div>
+                    <strong style="color: #2d3748; font-size: 16px;">Web Development Bootcamp</strong>
+                    <p style="color: #718096; font-size: 14px; margin: 4px 0 0 0;">Full-stack development mastery</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); border-radius: 12px; padding: 24px; margin: 32px 0; border-left: 4px solid #38b2ac; text-align: center;">
+        <h3 style="color: #234e52; margin: 0 0 12px 0; font-size: 18px;">💡 Pro Tip for Success</h3>
+        <p style="color: #2c7a7b; margin: 0; font-size: 15px; line-height: 1.6;">
+            Set aside just <strong>30 minutes daily</strong> for coding practice. Consistency beats intensity! 
+            Our AI will track your progress and suggest the perfect next steps. 🎯
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin: 32px 0;">
+        <h3 style="color: #2d3748; margin-bottom: 20px;">🤝 Need Help Getting Started?</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 400px; margin: 0 auto;">
+            <a href="{{ frontend_url }}/getting-started" style="display: block; padding: 16px; background: #f7fafc; border-radius: 12px; text-decoration: none; border: 2px solid #e2e8f0; transition: all 0.3s ease;">
+                <div style="font-size: 24px; margin-bottom: 8px;">📖</div>
+                <strong style="color: #667eea; font-size: 14px;">Getting Started Guide</strong>
+            </a>
+            <a href="mailto:support@wokkahlearn.com" style="display: block; padding: 16px; background: #f7fafc; border-radius: 12px; text-decoration: none; border: 2px solid #e2e8f0; transition: all 0.3s ease;">
+                <div style="font-size: 24px; margin-bottom: 8px;">💬</div>
+                <strong style="color: #667eea; font-size: 14px;">Contact Support</strong>
+            </a>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; padding: 24px; background: linear-gradient(135deg, #fef5e7 0%, #fef9c3 100%); border-radius: 16px;">
+        <p style="color: #744210; font-size: 16px; margin: 0 0 8px 0; font-weight: 600;">
+            🎉 Special Welcome Bonus!
+        </p>
+        <p style="color: #92400e; font-size: 14px; margin: 0;">
+            Get <strong>7 days free</strong> of our Premium AI coding assistant. 
+            <a href="{{ login_url }}" style="color: #d69e2e; text-decoration: none; font-weight: 600;">Claim now →</a>
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <p style="color: #4a5568; font-size: 18px; margin-bottom: 8px;">
+            Happy coding! 💻✨
+        </p>
+        <p style="color: #718096; font-size: 16px; margin: 0;">
+            <strong style="color: #667eea;">The WokkahLearn Team</strong>
+        </p>
+    </div>
+    
+    <style>
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .highlight-box div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+            
+            div[style*="display: flex"] {
+                flex-direction: column !important;
+                text-align: center !important;
+            }
+            
+            div[style*="display: flex"] div[style*="margin-right"] {
+                margin-right: 0 !important;
+                margin-bottom: 8px !important;
+            }
+        }
+    </style>
+{% endblock %}
