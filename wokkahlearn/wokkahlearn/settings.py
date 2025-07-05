@@ -325,22 +325,21 @@ FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://wokkahlearn.com')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Mailgun Configuration (HTTP API)
-#MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY', )
-#MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN','mail.wokkah.com')  # mail.wokkah.com
-#MAILGUN_URL = os.getenv('MAILGUN_URL', 'https://api.mailgun.net')
-#MAIL_FROM_ADDRESS = os.getenv('MAIL_FROM_ADDRESS', 'Wokkah Learn <noreply@mail.wokkah.com>')
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY', '')
+MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN','mail.wokkah.com')  # mail.wokkah.com
+MAILGUN_URL = os.getenv('MAILGUN_URL', 'https://api.mailgun.net')
+MAIL_FROM_ADDRESS = os.getenv('MAIL_FROM_ADDRESS', 'Wokkah Learn <noreply@mail.wokkah.com>')
 
 # Frontend URL for email links
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:8000/api/auth/')
 
 # Email Backend (Optional - you can still use Django's email for other purposes)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development logging
-#DEFAULT_FROM_EMAIL = MAIL_FROM_ADDRESS
+DEFAULT_FROM_EMAIL = MAIL_FROM_ADDRESS
 
 # Validate Mailgun configuration
 if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
     import warnings
     warnings.warn("Mailgun credentials not configured. Email sending will not work.")
 else:
-    print(f"✅ Mailgun configured for domain: {MAILGUN_DOMAIN}")  
-    
+    print(f"✅ Mailgun configured for domain: {MAILGUN_DOMAIN}")

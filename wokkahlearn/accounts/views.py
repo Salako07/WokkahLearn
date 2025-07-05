@@ -324,7 +324,7 @@ class UserUpdateView(generics.RetrieveUpdateAPIView):
         PUT: Update entire user info (full update)
         PATCH: Partial update of user info
     """
-    serializer_class = UserSerializer  # You'll need to create this
+    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
     
     def get_object(self):

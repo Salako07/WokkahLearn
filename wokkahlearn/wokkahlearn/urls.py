@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Health check
-    path('api/health/', include('health_check.urls')),
+    path('api/', include('health_check.urls')),
     
     # Authentication
     path('api/auth/', include('accounts.urls')),
