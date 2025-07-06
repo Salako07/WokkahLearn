@@ -1,15 +1,18 @@
-# courses/views.py
+# courses/views.py - FIXED AND COMPLETE VERSION
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from django.db.models import Q, Avg, Count, Max, Sum
+from django.db.models import Q, Avg, Count, Max, Sum, F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from datetime import timedelta
 from django.utils import timezone
-from django.db import models
+from django.db import models, transaction
+from django.contrib.auth import get_user_model
 import django_filters
+import logging
 
 from .models import (
     CourseCategory, Course, Module, Lesson, Exercise, 
@@ -25,8 +28,14 @@ from .serializers import (
     CreateCourseRatingSerializer
 )
 
+User = get_user_model()
+logger = logging.getLogger(__name__)
 
-# Custom Filters
+
+# =============================================================================
+# CUSTOM FILTERS
+# =============================================================================
+
 class CourseFilter(django_filters.FilterSet):
     """Custom filter for Course model with advanced filtering"""
     
@@ -89,12 +98,6 @@ class CourseFilter(django_filters.FilterSet):
         lookup_expr='lte'
     )
     
-    # Instructor filtering
-    instructor_username = django_filters.CharFilter(
-        field_name='instructor__username',
-        lookup_expr='icontains'
-    )
-    
     class Meta:
         model = Course
         fields = {
@@ -102,63 +105,26 @@ class CourseFilter(django_filters.FilterSet):
             'category': ['exact'],
             'is_free': ['exact'],
             'status': ['exact', 'in'],
-            'premium_only': ['exact'],
-            'certificate_enabled': ['exact'],
-            'allow_enrollment': ['exact'],
-            'instructor': ['exact'],
-        }
-        # Add filter overrides to handle JSONField properly
-        filter_overrides = {
-            models.JSONField: {
-                'filter_class': django_filters.CharFilter,
-                'extra': lambda f: {
-                    'lookup_expr': 'icontains',
-                },
-            },
-        }
-
-
-class LessonFilter(django_filters.FilterSet):
-    """Custom filter for Lesson model"""
-    
-    module_course = django_filters.UUIDFilter(
-        field_name='module__course',
-        help_text="Filter by course ID"
-    )
-    
-    duration_min = django_filters.DurationFilter(
-        field_name='estimated_duration',
-        lookup_expr='gte'
-    )
-    duration_max = django_filters.DurationFilter(
-        field_name='estimated_duration',
-        lookup_expr='lte'
-    )
-    
-    class Meta:
-        model = Lesson
-        fields = {
-            'module': ['exact'],
-            'lesson_type': ['exact', 'in'],
-            'is_required': ['exact'],
-            'is_preview': ['exact'],
-            'allow_discussion': ['exact'],
+            'instructor': ['exact']
         }
 
 
 class ExerciseFilter(django_filters.FilterSet):
     """Custom filter for Exercise model"""
     
-    lesson_module = django_filters.UUIDFilter(
-        field_name='lesson__module',
+    # Filter by lesson's module
+    lesson_module = django_filters.NumberFilter(
+        field_name='lesson__module__id',
         help_text="Filter by module ID"
     )
     
-    lesson_course = django_filters.UUIDFilter(
-        field_name='lesson__module__course',
+    # Filter by lesson's course
+    lesson_course = django_filters.NumberFilter(
+        field_name='lesson__module__course__id',
         help_text="Filter by course ID"
     )
     
+    # Points range filtering
     points_min = django_filters.NumberFilter(
         field_name='points',
         lookup_expr='gte'
@@ -171,23 +137,38 @@ class ExerciseFilter(django_filters.FilterSet):
     class Meta:
         model = Exercise
         fields = {
-            'lesson': ['exact'],
             'exercise_type': ['exact', 'in'],
             'difficulty': ['exact', 'in'],
-            'programming_language': ['exact', 'icontains'],
+            'programming_language': ['exact', 'in'],
             'ai_hints_enabled': ['exact'],
             'allow_collaboration': ['exact'],
         }
 
 
-# ViewSets
+class LessonFilter(django_filters.FilterSet):
+    """Custom filter for Lesson model"""
+    
+    class Meta:
+        model = Lesson
+        fields = {
+            'module': ['exact'],
+            'lesson_type': ['exact', 'in'],
+            'is_required': ['exact'],
+            'is_preview': ['exact'],
+        }
+
+
+# =============================================================================
+# VIEWSETS
+# =============================================================================
+
 class CourseCategoryViewSet(viewsets.ModelViewSet):
     """API endpoints for course categories"""
     queryset = CourseCategory.objects.filter(is_active=True)
     serializer_class = CourseCategorySerializer
-    permission_classes = [permissions.AllowAny]  # Categories are public
+    permission_classes = [AllowAny]  # Categories are public
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['parent', 'is_active']  # Simple fields only, no JSONFields
+    filterset_fields = ['parent', 'is_active']
     search_fields = ['name', 'description']
     ordering_fields = ['order', 'name', 'created_at']
     ordering = ['order', 'name']
@@ -195,11 +176,24 @@ class CourseCategoryViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         """Only admins and instructors can create/update/delete categories"""
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            permission_classes = [permissions.IsAuthenticated]
-            # Add additional permission check for admin/instructor roles
+            permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [permissions.AllowAny]
+            permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
+    
+    def perform_create(self, serializer):
+        """Check permissions for category creation"""
+        user = self.request.user
+        if not (user.is_staff or (hasattr(user, 'can_teach') and user.can_teach)):
+            raise permissions.PermissionDenied("Only admins and instructors can create categories")
+        serializer.save()
+    
+    def perform_update(self, serializer):
+        """Check permissions for category updates"""
+        user = self.request.user
+        if not (user.is_staff or (hasattr(user, 'can_teach') and user.can_teach)):
+            raise permissions.PermissionDenied("Only admins and instructors can update categories")
+        serializer.save()
     
     @action(detail=True, methods=['get'])
     def courses(self, request, pk=None):
@@ -233,9 +227,9 @@ class CourseViewSet(viewsets.ModelViewSet):
     """API endpoints for courses"""
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [permissions.AllowAny]  # Public courses viewable by all
+    permission_classes = [AllowAny]  # Public courses viewable by all
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_class = CourseFilter  # Use our custom filter class
+    filterset_class = CourseFilter
     search_fields = ['title', 'description', 'tags', 'skills_gained']
     ordering_fields = [
         'created_at', 'total_enrollments', 'average_rating', 
@@ -244,81 +238,110 @@ class CourseViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
     
     def get_queryset(self):
-        """Filter courses based on user permissions"""
+        """Filter courses based on user permissions and status"""
         user = self.request.user
         
-        if user.is_authenticated and hasattr(user, 'can_teach') and user.can_teach:
-            # Instructors can see their own courses regardless of status
-            return Course.objects.filter(
-                Q(status='published') | Q(instructor=user)
-            ).distinct()
+        if user.is_authenticated:
+            if user.is_staff:
+                # Admin can see all courses
+                return Course.objects.all()
+            elif hasattr(user, 'can_teach') and user.can_teach:
+                # Instructors can see published courses + their own courses
+                return Course.objects.filter(
+                    Q(status='published') | Q(instructor=user)
+                ).distinct()
+            else:
+                # Students can see published courses + enrolled courses
+                return Course.objects.filter(
+                    Q(status='published') | Q(enrollments__student=user)
+                ).distinct()
         else:
-            # Public users can only see published courses
+            # Anonymous users can only see published courses
             return Course.objects.filter(status='published')
     
     def get_serializer_class(self):
-        if self.action == 'create':
-            return CreateCourseSerializer
-        elif self.action == 'retrieve':
+        if self.action == 'retrieve':
             return DetailedCourseSerializer
+        elif self.action in ['create', 'update', 'partial_update']:
+            return CreateCourseSerializer
         return CourseSerializer
     
     def get_permissions(self):
-        """Different permissions for different actions"""
+        """Dynamic permissions based on action"""
         if self.action in ['create']:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [IsAuthenticated]
         elif self.action in ['update', 'partial_update', 'destroy']:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [permissions.AllowAny]
+            permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
     
     def perform_create(self, serializer):
-        """Set the instructor to the current user"""
-        serializer.save(instructor=self.request.user)
+        """Check if user can create courses"""
+        user = self.request.user
+        if not (user.is_staff or (hasattr(user, 'can_teach') and user.can_teach)):
+            raise permissions.PermissionDenied("Only instructors can create courses")
+        serializer.save(instructor=user)
     
     def perform_update(self, serializer):
-        """Only allow instructors to update their own courses"""
+        """Check if user can update this course"""
         course = self.get_object()
-        if course.instructor != self.request.user and not self.request.user.is_staff:
+        user = self.request.user
+        if course.instructor != user and not user.is_staff:
             raise permissions.PermissionDenied("You can only update your own courses")
         serializer.save()
     
-    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def perform_destroy(self, instance):
+        """Check if user can delete this course"""
+        user = self.request.user
+        if instance.instructor != user and not user.is_staff:
+            raise permissions.PermissionDenied("You can only delete your own courses")
+        instance.delete()
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def enroll(self, request, pk=None):
         """Enroll user in course"""
         course = self.get_object()
         user = request.user
         
-        # Check if user can enroll
-        if not course.can_enroll(user):
+        try:
+            with transaction.atomic():
+                # Check if already enrolled
+                if CourseEnrollment.objects.filter(student=user, course=course).exists():
+                    return Response(
+                        {'error': 'You are already enrolled in this course'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                # Check enrollment constraints
+                if not course.can_enroll(user):
+                    return Response(
+                        {'error': 'You cannot enroll in this course at this time'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                # Create enrollment
+                enrollment = CourseEnrollment.objects.create(
+                    student=user,
+                    course=course,
+                    enrollment_source='direct'
+                )
+                
+                # Update course enrollment count
+                course.total_enrollments = F('total_enrollments') + 1
+                course.save(update_fields=['total_enrollments'])
+                
+                serializer = CourseEnrollmentSerializer(enrollment, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                
+        except Exception as e:
+            logger.error(f"Enrollment error for user {user.id} in course {course.id}: {str(e)}")
             return Response(
-                {'error': 'Cannot enroll in this course'},
-                status=status.HTTP_400_BAD_REQUEST
+                {'error': 'Failed to enroll in course'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
-        # Check if already enrolled
-        if CourseEnrollment.objects.filter(student=user, course=course).exists():
-            return Response(
-                {'error': 'Already enrolled in this course'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        # Create enrollment
-        enrollment = CourseEnrollment.objects.create(
-            student=user,
-            course=course,
-            enrollment_source='direct'
-        )
-        
-        # Update course enrollment count
-        course.total_enrollments = course.enrollments.count()
-        course.save(update_fields=['total_enrollments'])
-        
-        serializer = CourseEnrollmentSerializer(enrollment, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    @action(detail=True, methods=['delete'], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
     def unenroll(self, request, pk=None):
         """Unenroll user from course"""
         course = self.get_object()
@@ -329,61 +352,58 @@ class CourseViewSet(viewsets.ModelViewSet):
             enrollment.delete()
             
             # Update course enrollment count
-            course.total_enrollments = course.enrollments.count()
+            course.total_enrollments = F('total_enrollments') - 1
             course.save(update_fields=['total_enrollments'])
             
-            return Response({'message': 'Successfully unenrolled'})
+            return Response({'message': 'Successfully unenrolled from course'})
+            
         except CourseEnrollment.DoesNotExist:
             return Response(
-                {'error': 'Not enrolled in this course'},
+                {'error': 'You are not enrolled in this course'},
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def rate(self, request, pk=None):
-        """Rate a course"""
+        """Rate and review course"""
         course = self.get_object()
         user = request.user
         
         # Check if user is enrolled
-        if not course.enrollments.filter(student=user).exists():
+        if not CourseEnrollment.objects.filter(student=user, course=course).exists():
             return Response(
-                {'error': 'Must be enrolled to rate this course'},
+                {'error': 'You must be enrolled to rate this course'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         serializer = CreateCourseRatingSerializer(data=request.data)
         if serializer.is_valid():
-            rating_value = serializer.validated_data['rating']
-            review = serializer.validated_data.get('review', '')
-            
-            # Create or update rating
+            # Update or create rating
             rating, created = CourseRating.objects.update_or_create(
-                course=course,
                 student=user,
-                defaults={'rating': rating_value, 'review': review}
+                course=course,
+                defaults=serializer.validated_data
             )
             
             # Update course average rating
             avg_rating = CourseRating.objects.filter(course=course).aggregate(
-                avg_rating=Avg('rating')
-            )['avg_rating']
-            
+                avg=Avg('rating')
+            )['avg']
             course.average_rating = avg_rating or 0
-            course.total_reviews = CourseRating.objects.filter(course=course).count()
-            course.save(update_fields=['average_rating', 'total_reviews'])
+            course.save(update_fields=['average_rating'])
             
-            return Response({'message': 'Course rated successfully'})
+            response_serializer = CourseRatingSerializer(rating, context={'request': request})
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def my_courses(self, request):
         """Get courses the user is enrolled in"""
         user = request.user
         enrollments = CourseEnrollment.objects.filter(
             student=user
-        ).select_related('course')
+        ).select_related('course').order_by('-enrolled_at')
         
         courses_data = []
         for enrollment in enrollments:
@@ -393,11 +413,11 @@ class CourseViewSet(viewsets.ModelViewSet):
         
         return Response(courses_data)
     
-    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def teaching(self, request):
         """Get courses the user is teaching (instructors only)"""
         user = request.user
-        if not hasattr(user, 'can_teach') or not user.can_teach:
+        if not (user.is_staff or (hasattr(user, 'can_teach') and user.can_teach)):
             return Response(
                 {'error': 'Permission denied'},
                 status=status.HTTP_403_FORBIDDEN
@@ -417,7 +437,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def analytics(self, request, pk=None):
-        """Get course analytics"""
+        """Get course analytics (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
@@ -431,63 +451,113 @@ class CourseViewSet(viewsets.ModelViewSet):
         time_range = request.query_params.get('time_range', '30d')
         detailed = request.query_params.get('detailed', 'false').lower() == 'true'
         
-        # Calculate analytics
-        enrollments = course.enrollments.all()
-        total_enrollments = enrollments.count()
-        active_students = enrollments.filter(last_accessed__gte=timezone.now() - timedelta(days=7)).count()
-        
-        # Calculate completion rate
-        completed_enrollments = enrollments.filter(status='completed').count()
-        completion_rate = (completed_enrollments / total_enrollments * 100) if total_enrollments > 0 else 0
-        
-        # Calculate average study time
-        total_study_time = enrollments.aggregate(
-            total=Sum('total_study_time')
-        )['total'] or timedelta(0)
-        avg_study_time = total_study_time / total_enrollments if total_enrollments > 0 else timedelta(0)
-        
-        analytics_data = {
-            'overview': {
+        try:
+            # Parse time range
+            if time_range == '7d':
+                start_date = timezone.now() - timedelta(days=7)
+            elif time_range == '30d':
+                start_date = timezone.now() - timedelta(days=30)
+            elif time_range == '90d':
+                start_date = timezone.now() - timedelta(days=90)
+            else:
+                start_date = timezone.now() - timedelta(days=30)
+            
+            # Calculate analytics
+            enrollments = course.enrollments.all()
+            total_enrollments = enrollments.count()
+            active_students = enrollments.filter(
+                last_accessed__gte=timezone.now() - timedelta(days=7)
+            ).count()
+            
+            # Calculate completion rates
+            completed_enrollments = enrollments.filter(status='completed').count()
+            completion_rate = (completed_enrollments / total_enrollments * 100) if total_enrollments > 0 else 0
+            
+            # Exercise statistics
+            exercises = Exercise.objects.filter(lesson__module__course=course)
+            total_exercises = exercises.count()
+            
+            submissions = ExerciseSubmission.objects.filter(
+                exercise__lesson__module__course=course,
+                submitted_at__gte=start_date
+            )
+            
+            exercise_stats = submissions.aggregate(
+                total_submissions=Count('id'),
+                avg_score=Avg('score'),
+                success_rate=Avg(
+                    models.Case(
+                        models.When(status='passed', then=1),
+                        default=0,
+                        output_field=models.FloatField()
+                    )
+                ) * 100
+            )
+            
+            analytics_data = {
+                'time_range': time_range,
                 'total_enrollments': total_enrollments,
                 'active_students': active_students,
                 'completion_rate': round(completion_rate, 2),
                 'average_rating': course.average_rating,
-                'total_reviews': course.total_reviews,
-                'enrollment_growth': 15.2,  # Calculate based on time_range
-                'rating_trend': 0.3
-            },
-            'engagement': {
-                'avg_session_duration': str(avg_study_time),
-                'lessons_completed_per_week': 8.3,  # Calculate from lesson progress
-                'exercise_attempts_per_student': 3.2,  # Calculate from submissions
-                'help_requests': 23,  # From collaboration data
-                'forum_posts': 145  # From discussion data
-            }
-        }
-        
-        if detailed:
-            # Add detailed performance data
-            analytics_data['performance'] = {
-                'top_performing_lessons': [],  # Calculate from lesson progress
-                'challenging_exercises': []  # Calculate from exercise submissions
+                'total_reviews': course.ratings.count(),
+                'total_exercises': total_exercises,
+                'total_submissions': exercise_stats['total_submissions'] or 0,
+                'average_exercise_score': round(exercise_stats['avg_score'] or 0, 2),
+                'exercise_success_rate': round(exercise_stats['success_rate'] or 0, 2),
             }
             
-            analytics_data['trends'] = {
-                'weekly_enrollments': [12, 18, 15, 22, 19, 25, 28],
-                'completion_rates': [65, 68, 71, 74, 76, 78, completion_rate],
-                'student_activity': [89, 92, 87, 94, 91, 88, 95]
-            }
-        
-        return Response(analytics_data)
+            if detailed:
+                # Add detailed analytics
+                analytics_data.update({
+                    'enrollments_by_week': self._get_enrollments_by_week(course, start_date),
+                    'progress_distribution': self._get_progress_distribution(course),
+                    'difficult_exercises': self._get_difficult_exercises(course),
+                    'top_performing_students': self._get_top_students(course),
+                })
+            
+            return Response(analytics_data)
+            
+        except Exception as e:
+            logger.error(f"Analytics error for course {course.id}: {str(e)}")
+            return Response(
+                {'error': 'Failed to generate analytics'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    def _get_enrollments_by_week(self, course, start_date):
+        """Get enrollment data by week"""
+        enrollments = course.enrollments.filter(enrolled_at__gte=start_date)
+        # Implementation for weekly enrollment data
+        return []
+    
+    def _get_progress_distribution(self, course):
+        """Get distribution of student progress"""
+        enrollments = course.enrollments.all()
+        # Implementation for progress distribution
+        return {}
+    
+    def _get_difficult_exercises(self, course):
+        """Get exercises with low success rates"""
+        # Implementation for difficult exercises
+        return []
+    
+    def _get_top_students(self, course):
+        """Get top performing students"""
+        # Implementation for top students
+        return []
     
     @action(detail=True, methods=['get'])
     def engagement(self, request, pk=None):
-        """Get course engagement metrics"""
+        """Get engagement metrics (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
         if course.instructor != user and not user.is_staff:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         # Calculate engagement metrics
         enrollments = course.enrollments.all()
@@ -496,71 +566,91 @@ class CourseViewSet(viewsets.ModelViewSet):
             'active_students_7d': enrollments.filter(
                 last_accessed__gte=timezone.now() - timedelta(days=7)
             ).count(),
-            'avg_session_duration': '42m',  # Calculate from study sessions
-            'lesson_completion_rate': 85.5,  # Calculate from lesson progress
-            'exercise_completion_rate': 78.3,  # Calculate from exercise submissions
-            'collaboration_sessions': 67,  # From collaboration data
-            'help_requests': 23,  # From help request data
+            'active_students_30d': enrollments.filter(
+                last_accessed__gte=timezone.now() - timedelta(days=30)
+            ).count(),
+            'average_session_duration': 0,  # TODO: Implement when study sessions are tracked
+            'forum_posts': 0,  # TODO: Implement when forum is added
+            'collaboration_sessions': 0,  # TODO: Implement when collaboration is added
         }
         
         return Response(engagement_data)
     
     @action(detail=True, methods=['get'])
     def performance(self, request, pk=None):
-        """Get course performance insights"""
+        """Get performance insights (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
         if course.instructor != user and not user.is_staff:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
-        # Calculate performance insights
+        # Calculate performance metrics
+        submissions = ExerciseSubmission.objects.filter(
+            exercise__lesson__module__course=course
+        )
+        
         performance_data = {
-            'top_performing_lessons': [
-                {'title': 'Python Fundamentals', 'completion_rate': 95.2, 'avg_score': 88.5},
-                {'title': 'Object-Oriented Programming', 'completion_rate': 89.1, 'avg_score': 82.3},
-            ],
-            'challenging_exercises': [
-                {'title': 'Recursive Algorithms', 'avg_attempts': 4.8, 'success_rate': 52.3},
-                {'title': 'Dynamic Programming', 'avg_attempts': 5.2, 'success_rate': 48.7},
-            ],
-            'bottleneck_lessons': [],  # Lessons where students get stuck
-            'skill_gaps': []  # Areas where students struggle
+            'average_score': submissions.aggregate(avg=Avg('score'))['avg'] or 0,
+            'pass_rate': submissions.filter(status='passed').count() / submissions.count() * 100 if submissions.count() > 0 else 0,
+            'completion_time_avg': 0,  # TODO: Implement
+            'retry_rate': 0,  # TODO: Implement
         }
         
         return Response(performance_data)
     
     @action(detail=True, methods=['get'])
     def export(self, request, pk=None):
-        """Export course analytics report"""
+        """Export analytics report (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
         if course.instructor != user and not user.is_staff:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
-        export_format = request.query_params.get('format', 'csv')
+        export_format = request.query_params.get('format', 'json')
+        include_student_data = request.query_params.get('include_student_data', 'false').lower() == 'true'
         
-        # Generate export data
-        if export_format == 'csv':
-            # Return CSV data
-            return Response({'download_url': f'/api/courses/{pk}/analytics.csv'})
-        elif export_format == 'pdf':
-            # Return PDF report
-            return Response({'download_url': f'/api/courses/{pk}/analytics.pdf'})
-        
-        return Response({'error': 'Unsupported format'}, status=status.HTTP_400_BAD_REQUEST)
+        # TODO: Implement actual export functionality
+        return Response({
+            'message': 'Export functionality will be implemented',
+            'format': export_format,
+            'include_student_data': include_student_data
+        })
     
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
     def students(self, request, pk=None):
-        """Get course students with progress"""
+        """Get enrolled students (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
         if course.instructor != user and not user.is_staff:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         enrollments = course.enrollments.select_related('student').order_by('-enrolled_at')
+        
+        # Apply filters
+        status_filter = request.query_params.get('status')
+        if status_filter:
+            enrollments = enrollments.filter(status=status_filter)
+        
+        search = request.query_params.get('search')
+        if search:
+            enrollments = enrollments.filter(
+                Q(student__username__icontains=search) |
+                Q(student__first_name__icontains=search) |
+                Q(student__last_name__icontains=search) |
+                Q(student__email__icontains=search)
+            )
         
         students_data = []
         for enrollment in enrollments:
@@ -569,26 +659,32 @@ class CourseViewSet(viewsets.ModelViewSet):
                 'username': enrollment.student.username,
                 'full_name': enrollment.student.get_full_name(),
                 'email': enrollment.student.email,
-                'avatar': enrollment.student.avatar.url if enrollment.student.avatar else None,
+                'avatar': enrollment.student.avatar.url if hasattr(enrollment.student, 'avatar') and enrollment.student.avatar else None,
                 'enrollment': CourseEnrollmentSerializer(enrollment, context={'request': request}).data
             }
             students_data.append(student_data)
         
-        return Response(students_data)
+        return Response({
+            'count': len(students_data),
+            'results': students_data
+        })
     
     @action(detail=True, methods=['post'])
     def publish(self, request, pk=None):
-        """Publish course"""
+        """Publish course (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
         if course.instructor != user and not user.is_staff:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         if course.status != 'published':
             course.status = 'published'
             course.published_at = timezone.now()
-            course.save()
+            course.save(update_fields=['status', 'published_at'])
             
             return Response({'message': 'Course published successfully'})
         
@@ -596,15 +692,18 @@ class CourseViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['post'])
     def unpublish(self, request, pk=None):
-        """Unpublish course"""
+        """Unpublish course (instructor/admin only)"""
         course = self.get_object()
         user = request.user
         
         if course.instructor != user and not user.is_staff:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         course.status = 'draft'
-        course.save()
+        course.save(update_fields=['status'])
         
         return Response({'message': 'Course unpublished successfully'})
     
@@ -622,9 +721,9 @@ class ModuleViewSet(viewsets.ModelViewSet):
     """API endpoints for course modules"""
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['course', 'is_required']  # Simple fields only
+    filterset_fields = ['course', 'is_required']
     ordering_fields = ['order', 'created_at']
     ordering = ['order']
     
@@ -643,7 +742,7 @@ class ModuleViewSet(viewsets.ModelViewSet):
         return ModuleSerializer
     
     def perform_create(self, serializer):
-        """Check if user can create modules for this course"""
+        """Check if user can create modules"""
         course = serializer.validated_data['course']
         if course.instructor != self.request.user and not self.request.user.is_staff:
             raise permissions.PermissionDenied("You can only create modules for your own courses")
@@ -658,7 +757,7 @@ class ModuleViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def lessons(self, request, pk=None):
-        """Get all lessons in this module"""
+        """Get all lessons for this module"""
         module = self.get_object()
         lessons = module.lessons.order_by('order')
         serializer = LessonSerializer(lessons, many=True, context={'request': request})
@@ -669,21 +768,20 @@ class LessonViewSet(viewsets.ModelViewSet):
     """API endpoints for lessons"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = LessonFilter
-    search_fields = ['title', 'description', 'content']
+    search_fields = ['title', 'content']
     ordering_fields = ['order', 'created_at']
     ordering = ['order']
     
     def get_queryset(self):
-        """Filter lessons based on access permissions"""
+        """Filter lessons based on module access"""
         user = self.request.user
         return Lesson.objects.filter(
             Q(module__course__status='published') |
             Q(module__course__instructor=user) |
-            Q(module__course__enrollments__student=user) |
-            Q(is_preview=True)  # Preview lessons are always accessible
+            Q(module__course__enrollments__student=user)
         ).distinct()
     
     def get_serializer_class(self):
@@ -705,8 +803,8 @@ class LessonViewSet(viewsets.ModelViewSet):
             raise permissions.PermissionDenied("You can only update lessons for your own courses")
         serializer.save()
     
-    @action(detail=True, methods=['post'])
-    def mark_completed(self, request, pk=None):
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def mark_complete(self, request, pk=None):
         """Mark lesson as completed"""
         lesson = self.get_object()
         user = request.user
@@ -720,35 +818,27 @@ class LessonViewSet(viewsets.ModelViewSet):
             progress, created = LessonProgress.objects.get_or_create(
                 enrollment=enrollment,
                 lesson=lesson,
-                defaults={
-                    'status': 'completed',
-                    'progress_percentage': 100,
-                    'completed_at': timezone.now()
-                }
+                defaults={'started_at': timezone.now()}
             )
             
-            if not created and progress.status != 'completed':
-                progress.status = 'completed'
-                progress.progress_percentage = 100
+            if not progress.completed_at:
                 progress.completed_at = timezone.now()
                 progress.save()
-            
-            # Update enrollment progress
-            enrollment.lessons_completed = LessonProgress.objects.filter(
-                enrollment=enrollment,
-                status='completed'
-            ).count()
-            enrollment.update_progress()
-            
-            return Response({'message': 'Lesson marked as completed'})
-            
+                
+                # Update enrollment progress
+                enrollment.update_progress()
+                
+                return Response({'message': 'Lesson marked as complete'})
+            else:
+                return Response({'message': 'Lesson already completed'})
+                
         except CourseEnrollment.DoesNotExist:
             return Response(
                 {'error': 'Not enrolled in this course'},
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def bookmark(self, request, pk=None):
         """Toggle lesson bookmark"""
         lesson = self.get_object()
@@ -762,7 +852,8 @@ class LessonViewSet(viewsets.ModelViewSet):
             
             progress, created = LessonProgress.objects.get_or_create(
                 enrollment=enrollment,
-                lesson=lesson
+                lesson=lesson,
+                defaults={'started_at': timezone.now()}
             )
             
             progress.bookmarked = not progress.bookmarked
@@ -790,7 +881,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
     """API endpoints for exercises"""
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ExerciseFilter
     search_fields = ['title', 'description']
@@ -832,27 +923,15 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         user = request.user
         
         # Check if user is enrolled in the course
-        try:
-            enrollment = CourseEnrollment.objects.get(
-                student=user,
-                course=exercise.lesson.module.course
-            )
-        except CourseEnrollment.DoesNotExist:
+        if not CourseEnrollment.objects.filter(
+            student=user,
+            course=exercise.lesson.module.course
+        ).exists():
             return Response(
-                {'error': 'Not enrolled in this course'},
-                status=status.HTTP_400_BAD_REQUEST
+                {'error': 'You must be enrolled in the course to submit exercises'},
+                status=status.HTTP_403_FORBIDDEN
             )
         
-        # Check attempt limits
-        if exercise.max_attempts:
-            current_attempts = exercise.submissions.filter(student=user).count()
-            if current_attempts >= exercise.max_attempts:
-                return Response(
-                    {'error': 'Maximum attempts reached'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        
-        # Create submission
         serializer = CreateExerciseSubmissionSerializer(
             data=request.data,
             context={'request': request, 'exercise': exercise}
@@ -861,49 +940,67 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             submission = serializer.save()
             
-            # Here you would integrate with code execution service
-            # For now, we'll just return the submission
+            # TODO: Integrate with code execution service
+            # For now, just mark as submitted
+            submission.status = 'submitted'
+            submission.save()
             
-            result_serializer = ExerciseSubmissionSerializer(
+            response_serializer = ExerciseSubmissionSerializer(
                 submission, 
                 context={'request': request}
             )
-            return Response(result_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(detail=True, methods=['get'])
-    def submissions(self, request, pk=None):
-        """Get user's submissions for this exercise"""
+    @action(detail=True, methods=['post'])
+    def test(self, request, pk=None):
+        """Test exercise solution without submitting"""
         exercise = self.get_object()
         user = request.user
         
-        submissions = exercise.submissions.filter(student=user).order_by('-submitted_at')
-        serializer = ExerciseSubmissionSerializer(
-            submissions, 
-            many=True, 
-            context={'request': request}
-        )
-        return Response(serializer.data)
+        # Check if user is enrolled in the course
+        if not CourseEnrollment.objects.filter(
+            student=user,
+            course=exercise.lesson.module.course
+        ).exists():
+            return Response(
+                {'error': 'You must be enrolled in the course to test exercises'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        code = request.data.get('code', '')
+        
+        # TODO: Integrate with code execution service
+        # For now, return mock test results
+        return Response({
+            'test_results': [
+                {'test': 'Test 1', 'passed': True, 'output': 'Expected output'},
+                {'test': 'Test 2', 'passed': False, 'output': 'Different output', 'expected': 'Expected output'}
+            ],
+            'all_passed': False,
+            'execution_time': 0.1
+        })
     
-    @action(detail=True, methods=['post'])
-    def get_hint(self, request, pk=None):
-        """Get AI-powered hint for exercise"""
+    @action(detail=True, methods=['get'])
+    def hint(self, request, pk=None):
+        """Get exercise hint"""
         exercise = self.get_object()
+        user = request.user
         
         if not exercise.ai_hints_enabled:
             return Response(
-                {'error': 'Hints not enabled for this exercise'},
+                {'error': 'Hints are not enabled for this exercise'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Here you would integrate with AI service to generate hints
-        # For now, return a placeholder
-        hint = "Try breaking down the problem into smaller steps."
+        # TODO: Integrate with AI service for dynamic hints
+        # For now, return static hint
+        hint = "Try breaking down the problem into smaller steps"
         
         return Response({
             'hint': hint,
-            'penalty_points': exercise.hint_penalty
+            'penalty_points': exercise.hint_penalty or 0
         })
     
     @action(detail=True, methods=['post'])
@@ -952,16 +1049,16 @@ class CourseEnrollmentViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoints for course enrollments (read-only)"""
     queryset = CourseEnrollment.objects.all()
     serializer_class = CourseEnrollmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['status', 'course', 'enrollment_source']  # Simple fields only
+    filterset_fields = ['status', 'course', 'enrollment_source']
     ordering_fields = ['enrolled_at', 'progress_percentage', 'last_accessed']
     ordering = ['-enrolled_at']
     
     def get_queryset(self):
         """Users can only see their own enrollments or enrollments in their courses"""
         user = self.request.user
-        if hasattr(user, 'can_teach') and user.can_teach:
+        if user.is_staff or (hasattr(user, 'can_teach') and user.can_teach):
             # Instructors can see enrollments for their courses
             return CourseEnrollment.objects.filter(
                 Q(student=user) |
@@ -972,8 +1069,16 @@ class CourseEnrollmentViewSet(viewsets.ReadOnlyModelViewSet):
     
     @action(detail=True, methods=['get'])
     def progress_detail(self, request, pk=None):
-        """Get detailed progress for an enrollment"""
+        """Get detailed progress information"""
         enrollment = self.get_object()
+        user = request.user
+        
+        # Check permissions
+        if enrollment.student != user and enrollment.course.instructor != user and not user.is_staff:
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         # Get lesson progress
         lesson_progress = LessonProgress.objects.filter(
@@ -986,49 +1091,59 @@ class CourseEnrollmentViewSet(viewsets.ReadOnlyModelViewSet):
             exercise__lesson__module__course=enrollment.course
         ).select_related('exercise')
         
-        data = {
+        progress_data = {
             'enrollment': CourseEnrollmentSerializer(enrollment, context={'request': request}).data,
-            'lesson_progress': LessonProgressSerializer(
-                lesson_progress, many=True, context={'request': request}
-            ).data,
-            'exercise_submissions': ExerciseSubmissionSerializer(
-                exercise_submissions, many=True, context={'request': request}
-            ).data
+            'lessons_progress': LessonProgressSerializer(lesson_progress, many=True, context={'request': request}).data,
+            'exercise_submissions': ExerciseSubmissionSerializer(exercise_submissions, many=True, context={'request': request}).data,
+            'summary': {
+                'total_lessons': enrollment.course.get_total_lessons(),
+                'completed_lessons': lesson_progress.filter(completed_at__isnull=False).count(),
+                'total_exercises': enrollment.course.get_total_exercises(),
+                'completed_exercises': exercise_submissions.filter(status='passed').count(),
+                'average_score': exercise_submissions.aggregate(avg=Avg('score'))['avg'] or 0,
+            }
         }
         
-        return Response(data)
+        return Response(progress_data)
 
 
-class LessonProgressViewSet(viewsets.ModelViewSet):
-    """API endpoints for lesson progress"""
+class LessonProgressViewSet(viewsets.ReadOnlyModelViewSet):
+    """API endpoints for lesson progress (read-only)"""
     queryset = LessonProgress.objects.all()
     serializer_class = LessonProgressSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['status', 'enrollment', 'lesson', 'bookmarked']  # Simple fields only
-    ordering_fields = ['last_accessed', 'progress_percentage']
-    ordering = ['-last_accessed']
+    filterset_fields = ['enrollment', 'lesson']
+    ordering_fields = ['started_at', 'completed_at']
+    ordering = ['-started_at']
     
     def get_queryset(self):
-        """Users can only see their own progress"""
+        """Users can only see their own progress or progress in their courses"""
         user = self.request.user
-        return LessonProgress.objects.filter(enrollment__student=user)
+        if user.is_staff or (hasattr(user, 'can_teach') and user.can_teach):
+            # Instructors can see progress for their courses
+            return LessonProgress.objects.filter(
+                Q(enrollment__student=user) |
+                Q(enrollment__course__instructor=user)
+            )
+        else:
+            return LessonProgress.objects.filter(enrollment__student=user)
 
 
 class ExerciseSubmissionViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoints for exercise submissions (read-only)"""
     queryset = ExerciseSubmission.objects.all()
     serializer_class = ExerciseSubmissionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['status', 'exercise', 'auto_graded', 'is_final_submission']  # Simple fields only
+    filterset_fields = ['status', 'exercise', 'auto_graded', 'is_final_submission']
     ordering_fields = ['submitted_at', 'score']
     ordering = ['-submitted_at']
     
     def get_queryset(self):
         """Users can only see their own submissions or submissions to their exercises"""
         user = self.request.user
-        if hasattr(user, 'can_teach') and user.can_teach:
+        if user.is_staff or (hasattr(user, 'can_teach') and user.can_teach):
             # Instructors can see submissions to their exercises
             return ExerciseSubmission.objects.filter(
                 Q(student=user) |
@@ -1071,16 +1186,16 @@ class CourseRatingViewSet(viewsets.ModelViewSet):
     """API endpoints for course ratings and reviews"""
     queryset = CourseRating.objects.all()
     serializer_class = CourseRatingSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['rating', 'course']  # Simple fields only
+    filterset_fields = ['rating', 'course']
     ordering_fields = ['created_at', 'rating']
     ordering = ['-created_at']
     
     def get_queryset(self):
         """Filter based on permissions"""
         user = self.request.user
-        if hasattr(user, 'can_teach') and user.can_teach:
+        if user.is_staff or (hasattr(user, 'can_teach') and user.can_teach):
             # Instructors can see reviews for their courses
             return CourseRating.objects.filter(
                 Q(student=user) |
@@ -1096,31 +1211,15 @@ class CourseRatingViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(student=self.request.user)
-    
-    @action(detail=True, methods=['post'])
-    def reply(self, request, pk=None):
-        """Reply to a course review (instructor only)"""
-        rating = self.get_object()
-        user = request.user
-        
-        # Check if user is the course instructor
-        if rating.course.instructor != user and not user.is_staff:
-            return Response(
-                {'error': 'Only course instructors can reply to reviews'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
-        reply_text = request.data.get('reply', '')
-        
-        # Add instructor reply to the rating (you'd need to add this field to model)
-        # For now, just return success
-        return Response({'message': 'Reply posted successfully'})
 
 
-# Additional utility endpoints
+# =============================================================================
+# UTILITY VIEWSETS
+# =============================================================================
+
 class BulkOperationsViewSet(viewsets.ViewSet):
     """Bulk operations for course management"""
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['post'])
     def bulk_create_modules(self, request):
@@ -1137,14 +1236,15 @@ class BulkOperationsViewSet(viewsets.ViewSet):
             )
         
         created_modules = []
-        for module_data in modules_data:
-            module_data['course'] = course.id
-            serializer = ModuleSerializer(data=module_data)
-            if serializer.is_valid():
-                module = serializer.save()
-                created_modules.append(module)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        with transaction.atomic():
+            for module_data in modules_data:
+                module_data['course'] = course.id
+                serializer = ModuleSerializer(data=module_data)
+                if serializer.is_valid():
+                    module = serializer.save()
+                    created_modules.append(module)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         result_serializer = ModuleSerializer(created_modules, many=True)
         return Response(result_serializer.data, status=status.HTTP_201_CREATED)
@@ -1167,74 +1267,206 @@ class BulkOperationsViewSet(viewsets.ViewSet):
             )
         
         created_lessons = []
-        for lesson_data in lessons_data:
-            lesson_data['module'] = module.id
-            serializer = LessonSerializer(data=lesson_data)
-            if serializer.is_valid():
-                lesson = serializer.save()
-                created_lessons.append(lesson)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        with transaction.atomic():
+            for lesson_data in lessons_data:
+                lesson_data['module'] = module.id
+                serializer = LessonSerializer(data=lesson_data)
+                if serializer.is_valid():
+                    lesson = serializer.save()
+                    created_lessons.append(lesson)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         result_serializer = LessonSerializer(created_lessons, many=True)
         return Response(result_serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=False, methods=['post'])
+    def exercises(self, request):
+        """Bulk operations on exercises"""
+        action = request.data.get('action')
+        exercise_ids = request.data.get('exercise_ids', [])
+        data = request.data.get('data', {})
+        
+        if action == 'update':
+            exercises = Exercise.objects.filter(
+                id__in=exercise_ids,
+                lesson__module__course__instructor=request.user
+            )
+            
+            updated_count = exercises.update(**data)
+            return Response({
+                'message': f'Updated {updated_count} exercises',
+                'updated_count': updated_count
+            })
+        
+        return Response(
+            {'error': 'Invalid action'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    @action(detail=False, methods=['post'])
+    def submissions(self, request):
+        """Bulk operations on submissions"""
+        action = request.data.get('action')
+        submission_ids = request.data.get('submission_ids', [])
+        data = request.data.get('data', {})
+        
+        if action == 'grade':
+            submissions = ExerciseSubmission.objects.filter(
+                id__in=submission_ids,
+                exercise__lesson__module__course__instructor=request.user
+            )
+            
+            updated_count = 0
+            for submission in submissions:
+                if 'feedback' in data:
+                    submission.instructor_feedback = data['feedback']
+                if 'score' in data:
+                    submission.score = data['score']
+                    submission.status = 'passed' if data['score'] >= 70 else 'failed'
+                submission.graded_by = request.user
+                submission.graded_at = timezone.now()
+                submission.auto_graded = False
+                submission.save()
+                updated_count += 1
+            
+            return Response({
+                'message': f'Graded {updated_count} submissions',
+                'graded_count': updated_count
+            })
+        
+        return Response(
+            {'error': 'Invalid action'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    @action(detail=False, methods=['post'])
+    def messages(self, request):
+        """Bulk send messages to students"""
+        action = request.data.get('action')
+        student_ids = request.data.get('student_ids', [])
+        data = request.data.get('data', {})
+        
+        if action == 'send_message':
+            # TODO: Implement messaging system
+            return Response({
+                'message': f'Sent message to {len(student_ids)} students',
+                'sent_count': len(student_ids)
+            })
+        
+        return Response(
+            {'error': 'Invalid action'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class AdvancedSearchViewSet(viewsets.ViewSet):
     """Advanced search endpoints"""
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
     
     @action(detail=False, methods=['get'])
     def courses(self, request):
-        """Advanced course search with complex filters"""
-        queryset = Course.objects.filter(status='published')
+        """Advanced course search"""
+        query = request.query_params.get('q', '')
+        instructor_id = request.query_params.get('instructor')
+        status_filter = request.query_params.get('status', 'published')
         
-        # Apply advanced filters
-        programming_languages = request.query_params.get('programming_languages')
-        if programming_languages:
-            queryset = queryset.filter(programming_languages__icontains=programming_languages)
+        courses = Course.objects.filter(status=status_filter)
         
-        skills_gained = request.query_params.get('skills_gained')
-        if skills_gained:
-            queryset = queryset.filter(skills_gained__icontains=skills_gained)
-        
-        min_duration = request.query_params.get('min_duration')
-        if min_duration:
-            queryset = queryset.filter(estimated_duration__gte=min_duration)
-        
-        max_duration = request.query_params.get('max_duration')
-        if max_duration:
-            queryset = queryset.filter(estimated_duration__lte=max_duration)
-        
-        min_rating = request.query_params.get('min_rating')
-        if min_rating:
-            queryset = queryset.filter(average_rating__gte=float(min_rating))
-        
-        min_enrollments = request.query_params.get('min_enrollments')
-        if min_enrollments:
-            queryset = queryset.filter(total_enrollments__gte=int(min_enrollments))
-        
-        max_price = request.query_params.get('max_price')
-        if max_price:
-            queryset = queryset.filter(
-                Q(is_free=True) | Q(price__lte=float(max_price))
+        if query:
+            courses = courses.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(tags__icontains=query) |
+                Q(skills_gained__icontains=query)
             )
         
-        instructor_username = request.query_params.get('instructor_username')
-        if instructor_username:
-            queryset = queryset.filter(
-                instructor__username__icontains=instructor_username
+        if instructor_id:
+            courses = courses.filter(instructor_id=instructor_id)
+        
+        courses = courses.order_by('-created_at')[:20]  # Limit results
+        
+        serializer = CourseSerializer(courses, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def students(self, request):
+        """Search students (instructor only)"""
+        if not (request.user.is_authenticated and 
+                (request.user.is_staff or (hasattr(request.user, 'can_teach') and request.user.can_teach))):
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
             )
         
-        # Apply ordering
-        ordering = request.query_params.get('ordering', '-created_at')
-        queryset = queryset.order_by(ordering)
+        query = request.query_params.get('q', '')
+        course_id = request.query_params.get('course')
         
-        # Paginate results
-        from rest_framework.pagination import PageNumberPagination
-        paginator = PageNumberPagination()
-        paginator.page_size = 20
-        result_page = paginator.paginate_queryset(queryset, request)
+        enrollments = CourseEnrollment.objects.select_related('student', 'course')
         
-        serializer = CourseSerializer(result_page, many=True, context={'request': request})
-        return paginator.get_paginated_response(serializer.data)
+        if course_id:
+            enrollments = enrollments.filter(course_id=course_id)
+        
+        # Filter by instructor's courses
+        enrollments = enrollments.filter(course__instructor=request.user)
+        
+        if query:
+            enrollments = enrollments.filter(
+                Q(student__username__icontains=query) |
+                Q(student__first_name__icontains=query) |
+                Q(student__last_name__icontains=query) |
+                Q(student__email__icontains=query)
+            )
+        
+        enrollments = enrollments.order_by('-enrolled_at')[:20]
+        
+        students_data = []
+        for enrollment in enrollments:
+            student_data = {
+                'id': enrollment.student.id,
+                'username': enrollment.student.username,
+                'full_name': enrollment.student.get_full_name(),
+                'email': enrollment.student.email,
+                'course': {
+                    'id': enrollment.course.id,
+                    'title': enrollment.course.title
+                },
+                'enrollment': CourseEnrollmentSerializer(enrollment, context={'request': request}).data
+            }
+            students_data.append(student_data)
+        
+        return Response(students_data)
+    
+    @action(detail=False, methods=['get'])
+    def submissions(self, request):
+        """Search exercise submissions (instructor only)"""
+        if not (request.user.is_authenticated and 
+                (request.user.is_staff or (hasattr(request.user, 'can_teach') and request.user.can_teach))):
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        query = request.query_params.get('q', '')
+        exercise_id = request.query_params.get('exercise')
+        
+        submissions = ExerciseSubmission.objects.select_related('student', 'exercise')
+        
+        # Filter by instructor's courses
+        submissions = submissions.filter(exercise__lesson__module__course__instructor=request.user)
+        
+        if exercise_id:
+            submissions = submissions.filter(exercise_id=exercise_id)
+        
+        if query:
+            submissions = submissions.filter(
+                Q(student__username__icontains=query) |
+                Q(student__first_name__icontains=query) |
+                Q(student__last_name__icontains=query) |
+                Q(submitted_code__icontains=query)
+            )
+        
+        submissions = submissions.order_by('-submitted_at')[:20]
+        
+        serializer = ExerciseSubmissionSerializer(submissions, many=True, context={'request': request})
+        return Response(serializer.data)

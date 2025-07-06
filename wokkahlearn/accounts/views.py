@@ -265,7 +265,7 @@ class LoginView(APIView):
         200: Login successful with JWT tokens and user data
         400: Invalid credentials or unverified email
     """
-    
+    permission_classes = [permissions.AllowAny]
     def post(self, request):
         """Authenticate user and return JWT tokens."""
         serializer = LoginSerializer(data=request.data)
