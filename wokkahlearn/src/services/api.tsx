@@ -918,3 +918,46 @@ const CourseProgress: React.FC<CourseProgressProps> = ({ courses }) => {
 };
 
 export default CourseProgress;
+
+
+// src/services/api.tsx - Add code execution API methods
+
+export class CodeExecutionAPI {
+  async getEnvironments() {
+    return apiClient.get('/code-execution/environments/');
+  }
+
+  async executeCode(data: {
+    source_code: string;
+    environment_id: string;
+    stdin_input?: string;
+    exercise_id?: string;
+    execution_type?: string;
+    command_line_args?: string[];
+    environment_vars?: Record<string, string>;
+  }) {
+    return apiClient.post('/code-execution/executions/', data);
+  }
+
+  async getExecution(executionId: string) {
+    return apiClient.get(`/code-execution/executions/${executionId}/`);
+  }
+
+  async stopExecution(executionId: string) {
+    return apiClient.post(`/code-execution/executions/${executionId}/stop/`);
+  }
+
+  async getExecutionHistory() {
+    return apiClient.get('/code-execution/executions/');
+  }
+
+  async getQuota() {
+    return apiClient.get('/code-execution/executions/quota/');
+  }
+
+  async getTemplates(params: { environment?: string } = {}) {
+    return apiClient.get('/code-execution/templates/', { params });
+  }
+}
+
+export const codeExecutionAPI = new CodeExecutionAPI();

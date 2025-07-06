@@ -20,7 +20,7 @@ urlpatterns = [
     # Individual app APIs
     path('api/courses/', include('courses.urls')),
     path('api/ai-tutor/', include('ai_tutor.urls')),
-   # path('api/code-execution/', include('code_execution.urls')),
+    path('api/code-execution/', include('code_execution.urls')),
     #path('api/collaboration/', include('collaboration.urls')),
     #path('api/analytics/', include('analytics.urls')),
     

@@ -343,3 +343,90 @@ if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
     warnings.warn("Mailgun credentials not configured. Email sending will not work.")
 else:
     print(f"✅ Mailgun configured for domain: {MAILGUN_DOMAIN}")
+
+
+# AI Configuration
+AI_SERVICES = {
+    'default_provider': os.getenv('AI_DEFAULT_PROVIDER', 'mock'),
+    'fallback_to_mock': os.getenv('AI_FALLBACK_TO_MOCK', 'True').lower() == 'true',
+    'openai': {
+        'api_key': os.getenv('OPENAI_API_KEY'),
+        'model': 'gpt-4',
+        'max_tokens': int(os.getenv('AI_MAX_TOKENS', 2000)),
+        'temperature': float(os.getenv('AI_TEMPERATURE', 0.7)),
+    },
+    'anthropic': {
+        'api_key': os.getenv('ANTHROPIC_API_KEY'),
+        'model': 'claude-3-sonnet-20240229',
+        'max_tokens': int(os.getenv('AI_MAX_TOKENS', 2000)),
+        'temperature': float(os.getenv('AI_TEMPERATURE', 0.7)),
+    },
+    'features': {
+        'code_analysis': os.getenv('AI_CODE_ANALYSIS_ENABLED', 'True').lower() == 'true',
+        'recommendations': os.getenv('AI_RECOMMENDATIONS_ENABLED', 'True').lower() == 'true',
+        'tutoring': os.getenv('AI_TUTORING_ENABLED', 'True').lower() == 'true',
+    },
+    'rate_limiting': {
+        'enabled': os.getenv('AI_RATE_LIMIT_ENABLED', 'True').lower() == 'true',
+        'requests_per_minute': 60,
+        'requests_per_hour': 1000,
+    },
+    'caching': {
+        'enabled': os.getenv('AI_CACHE_RESPONSES', 'True').lower() == 'true',
+        'ttl': 3600,  # 1 hour
+    }
+}
+
+
+# wokkahlearn/settings.py - Add code execution settings
+
+# Docker Configuration
+DOCKER_NETWORK = 'wokkahlearn_execution'
+CODE_EXECUTION_TIMEOUT = 30  # seconds
+MAX_MEMORY_USAGE = 128  # MB
+MAX_CONCURRENT_EXECUTIONS = 10
+
+# Code Execution Settings
+CODE_EXECUTION = {
+    'enabled': True,
+    'docker_network': DOCKER_NETWORK,
+    'default_timeout': CODE_EXECUTION_TIMEOUT,
+    'max_memory_mb': MAX_MEMORY_USAGE,
+    'max_concurrent_executions': MAX_CONCURRENT_EXECUTIONS,
+    'cleanup_interval': 3600,  # 1 hour
+    'max_output_size_mb': 1,
+    'supported_languages': [
+        'python', 'javascript', 'java', 'cpp', 'c', 'go', 'rust'
+    ],
+    'quota_limits': {
+        'free_tier': {
+            'daily_executions': 50,
+            'cpu_time_seconds': 300,  # 5 minutes
+            'memory_mb': 1024  # 1 GB total
+        },
+        'premium_tier': {
+            'daily_executions': 500,
+            'cpu_time_seconds': 3600,  # 1 hour
+            'memory_mb': 10240  # 10 GB total
+        },
+        'instructor_tier': {
+            'daily_executions': 1000,
+            'cpu_time_seconds': 7200,  # 2 hours
+            'memory_mb': 20480  # 20 GB total
+        }
+    }
+}
+
+import crontab
+from celery import CELERY_BEAT_SCHEDULE
+# Celery Configuration for Background Processing
+CELERY_BEAT_SCHEDULE.update({
+    'cleanup-old-executions': {
+        'task': 'code_execution.tasks.cleanup_old_executions',
+        'schedule': crontab(minute=0, hour=2),  # 2 AM daily
+    },
+    'collect-execution-statistics': {
+        'task': 'code_execution.tasks.collect_daily_statistics',
+        'schedule': crontab(minute=30, hour=23),  # 11:30 PM daily
+    },
+})

@@ -1,0 +1,54 @@
+FROM python:3.11-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    linux-headers \
+    libffi-dev \
+    openssl-dev \
+    python3-dev \
+    py3-pip
+
+# Create non-root user
+RUN addgroup -g 1000 coderunner && \
+    adduser -D -s /bin/sh -u 1000 -G coderunner coderunner
+
+# Install common Python packages
+RUN pip install --no-cache-dir \
+    numpy==1.24.3 \
+    pandas==2.0.3 \
+    requests==2.31.0 \
+    matplotlib==3.7.2 \
+    pytest==7.4.0 \
+    flask==2.3.2 \
+    django==4.2.3 \
+    fastapi==0.100.0 \
+    beautifulsoup4==4.12.2 \
+    scikit-learn==1.3.0 \
+    pillow==10.0.0
+
+# Set up workspace
+WORKDIR /workspace
+RUN chown coderunner:coderunner /workspace
+
+# Security settings
+RUN echo 'coderunner:!:0:0:99999:7:::' > /etc/shadow
+RUN chmod 644 /etc/passwd /etc/group
+RUN chmod 600 /etc/shadow
+
+# Set resource limits
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/workspace
+ENV MAX_EXECUTION_TIME=30
+ENV MAX_MEMORY_MB=128
+
+# Copy execution script
+COPY --chown=coderunner:coderunner scripts/python_runner.py /usr/local/bin/
+RUN chmod +x /usr/local/bin/python_runner.py
+
+USER coderunner
+
+# Default command
+CMD ["python3"]

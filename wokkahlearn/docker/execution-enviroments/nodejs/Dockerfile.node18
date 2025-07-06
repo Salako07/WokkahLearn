@@ -1,0 +1,41 @@
+FROM node:18-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    linux-headers
+
+# Create non-root user
+RUN addgroup -g 1000 coderunner && \
+    adduser -D -s /bin/sh -u 1000 -G coderunner coderunner
+
+# Install common Node.js packages globally
+RUN npm install -g \
+    lodash@4.17.21 \
+    axios@1.4.0 \
+    express@4.18.2 \
+    moment@2.29.4 \
+    uuid@9.0.0 \
+    jest@29.6.2 \
+    eslint@8.45.0
+
+# Set up workspace
+WORKDIR /workspace
+RUN chown coderunner:coderunner /workspace
+
+# Security settings
+ENV NODE_ENV=sandbox
+ENV NODE_OPTIONS="--max-old-space-size=128"
+ENV MAX_EXECUTION_TIME=30
+ENV MAX_MEMORY_MB=128
+
+# Copy execution script
+COPY --chown=coderunner:coderunner scripts/node_runner.js /usr/local/bin/
+RUN chmod +x /usr/local/bin/node_runner.js
+
+USER coderunner
+
+# Default command
+CMD ["node"]s

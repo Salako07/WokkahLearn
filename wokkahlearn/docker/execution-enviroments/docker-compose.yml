@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # Python 3.11 Environment
+  python-3-11:
+    build:
+      context: ./python
+      dockerfile: Dockerfile.python311
+    image: wokkahlearn/python:3.11-alpine
+    container_name: wokkah-python-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+    
+  # Python 3.9 Environment (for compatibility)
+  python-3-9:
+    build:
+      context: ./python
+      dockerfile: Dockerfile.python39
+    image: wokkahlearn/python:3.9-alpine
+    container_name: wokkah-python39-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+
+  # Node.js 18 Environment
+  nodejs-18:
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile.node18
+    image: wokkahlearn/nodejs:18-alpine
+    container_name: wokkah-node-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+
+  # Java 17 Environment
+  java-17:
+    build:
+      context: ./java
+      dockerfile: Dockerfile.java17
+    image: wokkahlearn/java:17-alpine
+    container_name: wokkah-java-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+
+  # C++ Environment
+  cpp-gcc:
+    build:
+      context: ./cpp
+      dockerfile: Dockerfile.gcc
+    image: wokkahlearn/cpp:gcc-alpine
+    container_name: wokkah-cpp-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+
+  # Go Environment
+  go-1-20:
+    build:
+      context: ./go
+      dockerfile: Dockerfile.go120
+    image: wokkahlearn/go:1.20-alpine
+    container_name: wokkah-go-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+
+  # Rust Environment
+  rust-stable:
+    build:
+      context: ./rust
+      dockerfile: Dockerfile.rust
+    image: wokkahlearn/rust:stable-alpine
+    container_name: wokkah-rust-base
+    networks:
+      - wokkahlearn_execution
+    restart: "no"
+
+networks:
+  wokkahlearn_execution:
+    external: true
