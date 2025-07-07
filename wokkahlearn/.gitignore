@@ -11,3 +11,4 @@ folder.py
 Staticfiles/
 media/
 frontend/
+.log

@@ -1,0 +1,560 @@
+WARNING 2025-07-07 09:31:47,888 services 1 139650565946240 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:31:47,891 services 1 139650565946240 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:31:47,896 services 1 139650565946240 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:31:47,897 services 1 139650565946240 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:31:47,899 services 1 139650565946240 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:31:52,612 services 1 140127482702720 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:31:52,613 services 1 140127482702720 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:31:52,624 services 1 140127482702720 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:31:52,626 services 1 140127482702720 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:31:52,627 services 1 140127482702720 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:31:57,743 services 1 140588618394496 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:31:57,744 services 1 140588618394496 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:31:57,747 services 1 140588618394496 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:31:57,748 services 1 140588618394496 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:31:57,750 services 1 140588618394496 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:32:05,652 services 1 139738216336256 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:32:05,653 services 1 139738216336256 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:32:05,656 services 1 139738216336256 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:32:05,658 services 1 139738216336256 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:32:05,659 services 1 139738216336256 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:32:14,862 services 1 140475313277824 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:32:14,864 services 1 140475313277824 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:32:14,869 services 1 140475313277824 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:32:14,872 services 1 140475313277824 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:32:14,875 services 1 140475313277824 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:32:25,511 services 1 140076564654976 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:32:25,512 services 1 140076564654976 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:32:25,514 services 1 140076564654976 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:32:25,515 services 1 140076564654976 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:32:25,517 services 1 140076564654976 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:34:30,988 services 1 140522128259968 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:34:30,992 services 1 140522128259968 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:34:30,998 services 1 140522128259968 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:34:30,998 services 1 140522128259968 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:34:30,999 services 1 140522128259968 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:34:31,161 services 1 140508626447232 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:34:31,163 services 1 140508626447232 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:34:31,178 services 1 140508626447232 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:34:31,189 services 1 140508626447232 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:34:31,190 services 1 140508626447232 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:34:45,444 services 1 140012825299840 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:34:45,484 services 1 140012825299840 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:34:45,486 services 1 140012825299840 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:34:45,490 services 1 140012825299840 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:34:45,496 services 1 140012825299840 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:34:54,669 services 1 139762645007232 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:34:54,694 services 1 139762645007232 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:34:54,713 services 1 139762645007232 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:34:54,714 services 1 139762645007232 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:34:54,715 services 1 139762645007232 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:02,957 services 1 140166780689280 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:02,958 services 1 140166780689280 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:02,959 services 1 140166780689280 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:02,960 services 1 140166780689280 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:02,960 services 1 140166780689280 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:14,480 services 1 140572812733312 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:14,481 services 1 140572812733312 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:14,483 services 1 140572812733312 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:14,485 services 1 140572812733312 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:14,486 services 1 140572812733312 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:22,553 services 1 139813851900800 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:22,554 services 1 139813851900800 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:22,556 services 1 139813851900800 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:22,557 services 1 139813851900800 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:22,557 services 1 139813851900800 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:33,479 services 1 140153449282432 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:33,480 services 1 140153449282432 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:33,482 services 1 140153449282432 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:33,482 services 1 140153449282432 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:33,483 services 1 140153449282432 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:43,089 services 1 140301978770304 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:43,090 services 1 140301978770304 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:43,092 services 1 140301978770304 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:43,093 services 1 140301978770304 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:43,093 services 1 140301978770304 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:50,502 services 1 140456965634944 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:50,503 services 1 140456965634944 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:50,505 services 1 140456965634944 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:50,505 services 1 140456965634944 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:50,506 services 1 140456965634944 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:35:59,023 services 1 140526702078848 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:35:59,024 services 1 140526702078848 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:35:59,026 services 1 140526702078848 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:35:59,027 services 1 140526702078848 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:35:59,029 services 1 140526702078848 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:36:07,886 services 1 140365215898496 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:36:07,886 services 1 140365215898496 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:36:07,888 services 1 140365215898496 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:36:07,888 services 1 140365215898496 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:36:07,889 services 1 140365215898496 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:36:21,317 services 1 139730734357376 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:36:21,319 services 1 139730734357376 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:36:21,325 services 1 139730734357376 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:36:21,326 services 1 139730734357376 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:36:21,327 services 1 139730734357376 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:36:42,091 services 1 140425974610816 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:36:42,092 services 1 140425974610816 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:36:42,094 services 1 140425974610816 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:36:42,096 services 1 140425974610816 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:36:42,097 services 1 140425974610816 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:37:18,225 services 1 140335527009152 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:37:18,226 services 1 140335527009152 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:37:18,227 services 1 140335527009152 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:37:18,228 services 1 140335527009152 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:37:18,229 services 1 140335527009152 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:37:27,070 services 1 140430847044480 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:37:27,071 services 1 140430847044480 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:37:27,072 services 1 140430847044480 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:37:27,073 services 1 140430847044480 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:37:27,074 services 1 140430847044480 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:37:33,814 services 1 139920936307584 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:37:33,814 services 1 139920936307584 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:37:33,816 services 1 139920936307584 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:37:33,816 services 1 139920936307584 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:37:33,817 services 1 139920936307584 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+WARNING 2025-07-07 09:37:40,203 services 1 140661852765056 ⚠️ OpenAI initialization failed: module 'openai' has no attribute 'OpenAI'
+WARNING 2025-07-07 09:37:40,204 services 1 140661852765056 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING 2025-07-07 09:37:40,206 services 1 140661852765056 ⚠️ No AI API keys configured, using mock service for development
+INFO 2025-07-07 09:37:40,207 services 1 140661852765056 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:37:40,208 services 1 140661852765056 📊 AI Service Status: {'openai': False, 'anthropic': False, 'mock': True, 'default': 'mock'}
+INFO 2025-07-07 09:45:13,693 services 1 140477730040704 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:45:13,696 services 1 140477730040704 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:45:13,707 services 1 140477730040704 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:45:13,708 services 1 140477730040704 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:45:13,709 services 1 140477730040704 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:45:13,741 services 1 139909512039296 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:45:13,744 services 1 139909512039296 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:45:13,750 services 1 139909512039296 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:45:13,751 services 1 139909512039296 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:45:13,754 services 1 139909512039296 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:45:26,666 services 1 139765592943488 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:45:26,667 services 1 139765592943488 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:45:26,668 services 1 139765592943488 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:45:26,668 services 1 139765592943488 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:45:26,669 services 1 139765592943488 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:45:37,456 services 1 139920074005376 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:45:37,465 services 1 139920074005376 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:45:37,469 services 1 139920074005376 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:45:37,483 services 1 139920074005376 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:45:37,484 services 1 139920074005376 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:45:51,117 services 1 140140742171520 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:45:51,128 services 1 140140742171520 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:45:51,139 services 1 140140742171520 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:45:51,217 services 1 140140742171520 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:45:51,246 services 1 140140742171520 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:46:06,119 services 1 139860754295680 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:46:06,121 services 1 139860754295680 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:46:06,125 services 1 139860754295680 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:46:06,126 services 1 139860754295680 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:46:06,128 services 1 139860754295680 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:46:19,185 services 1 140188337167232 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:46:19,186 services 1 140188337167232 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:46:19,192 services 1 140188337167232 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:46:19,196 services 1 140188337167232 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:46:19,203 services 1 140188337167232 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:46:37,829 services 1 140610227243904 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:46:37,831 services 1 140610227243904 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:46:37,837 services 1 140610227243904 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:46:37,843 services 1 140610227243904 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:46:37,845 services 1 140610227243904 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:46:50,450 services 1 140064436366208 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:46:50,451 services 1 140064436366208 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:46:50,458 services 1 140064436366208 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:46:50,460 services 1 140064436366208 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:46:50,463 services 1 140064436366208 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:47:05,846 services 1 140112540244864 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:47:05,858 services 1 140112540244864 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:47:05,862 services 1 140112540244864 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:47:05,863 services 1 140112540244864 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:47:05,866 services 1 140112540244864 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:47:17,263 services 1 140633913916288 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:47:17,264 services 1 140633913916288 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:47:17,273 services 1 140633913916288 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:47:17,275 services 1 140633913916288 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:47:17,276 services 1 140633913916288 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:47:26,138 services 1 140049576229760 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:47:26,139 services 1 140049576229760 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:47:26,142 services 1 140049576229760 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:47:26,144 services 1 140049576229760 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:47:26,146 services 1 140049576229760 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:47:35,018 services 1 140285173488512 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:47:35,019 services 1 140285173488512 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:47:35,022 services 1 140285173488512 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:47:35,024 services 1 140285173488512 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:47:35,027 services 1 140285173488512 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:47:44,444 services 1 140329136716672 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:47:44,444 services 1 140329136716672 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:47:44,448 services 1 140329136716672 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:47:44,455 services 1 140329136716672 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:47:44,456 services 1 140329136716672 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:47:57,052 services 1 139929664924544 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:47:57,053 services 1 139929664924544 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:47:57,055 services 1 139929664924544 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:47:57,057 services 1 139929664924544 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:47:57,059 services 1 139929664924544 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:48:08,355 services 1 140684825885568 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:48:08,356 services 1 140684825885568 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:48:08,359 services 1 140684825885568 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:48:08,360 services 1 140684825885568 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:48:08,363 services 1 140684825885568 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:48:16,932 services 1 140589571804032 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:48:16,933 services 1 140589571804032 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:48:16,936 services 1 140589571804032 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:48:16,939 services 1 140589571804032 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:48:16,943 services 1 140589571804032 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:48:32,325 services 1 140537480854400 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:48:32,326 services 1 140537480854400 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:48:32,327 services 1 140537480854400 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:48:32,328 services 1 140537480854400 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:48:32,329 services 1 140537480854400 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:48:39,198 services 1 140265516301184 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:48:39,199 services 1 140265516301184 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:48:39,201 services 1 140265516301184 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:48:39,202 services 1 140265516301184 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:48:39,202 services 1 140265516301184 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:48:46,814 services 1 140201299467136 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:48:46,815 services 1 140201299467136 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:48:46,819 services 1 140201299467136 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:48:46,820 services 1 140201299467136 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:48:46,821 services 1 140201299467136 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:48:54,404 services 1 139795346639744 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:48:54,405 services 1 139795346639744 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:48:54,406 services 1 139795346639744 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:48:54,407 services 1 139795346639744 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:48:54,408 services 1 139795346639744 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:49:05,882 services 1 140636374739840 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:49:05,883 services 1 140636374739840 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:49:05,885 services 1 140636374739840 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:49:05,885 services 1 140636374739840 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:49:05,886 services 1 140636374739840 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:49:20,891 services 1 140196495465344 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:49:20,892 services 1 140196495465344 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:49:20,896 services 1 140196495465344 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:49:20,897 services 1 140196495465344 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:49:20,898 services 1 140196495465344 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:49:41,373 services 1 140497749457792 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:49:41,374 services 1 140497749457792 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:49:41,376 services 1 140497749457792 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:49:41,377 services 1 140497749457792 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:49:41,377 services 1 140497749457792 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:10,608 services 1 140697913985920 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:10,610 services 1 140697913985920 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:10,614 services 1 140697913985920 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:10,615 services 1 140697913985920 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:10,616 services 1 140697913985920 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:11,655 services 1 140445041175424 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:11,655 services 1 140445041175424 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:11,657 services 1 140445041175424 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:11,658 services 1 140445041175424 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:11,658 services 1 140445041175424 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:28,578 services 1 139866387782528 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:28,581 services 1 139866387782528 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:28,586 services 1 139866387782528 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:28,591 services 1 139866387782528 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:28,593 services 1 139866387782528 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:35,968 services 1 139801185614720 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:35,969 services 1 139801185614720 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:35,970 services 1 139801185614720 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:35,971 services 1 139801185614720 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:35,972 services 1 139801185614720 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:43,413 services 1 140697491164032 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:43,415 services 1 140697491164032 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:43,417 services 1 140697491164032 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:43,418 services 1 140697491164032 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:43,418 services 1 140697491164032 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:50,463 services 1 140641875504000 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:50,464 services 1 140641875504000 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:50,466 services 1 140641875504000 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:50,467 services 1 140641875504000 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:50,467 services 1 140641875504000 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:52:58,411 services 1 140464030055296 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:52:58,412 services 1 140464030055296 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:52:58,419 services 1 140464030055296 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:52:58,420 services 1 140464030055296 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:52:58,421 services 1 140464030055296 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:53:07,353 services 1 140592821771136 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:53:07,354 services 1 140592821771136 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:53:07,356 services 1 140592821771136 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:53:07,360 services 1 140592821771136 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:53:07,360 services 1 140592821771136 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:53:20,440 services 1 140202914622336 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:53:20,441 services 1 140202914622336 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:53:20,443 services 1 140202914622336 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:53:20,444 services 1 140202914622336 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:53:20,446 services 1 140202914622336 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:53:38,959 services 1 140186400447360 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:53:38,960 services 1 140186400447360 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:53:38,968 services 1 140186400447360 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:53:38,970 services 1 140186400447360 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:53:38,970 services 1 140186400447360 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:53:46,876 services 1 140257591802752 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:53:46,877 services 1 140257591802752 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:53:46,879 services 1 140257591802752 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:53:46,879 services 1 140257591802752 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:53:46,880 services 1 140257591802752 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:53:54,696 services 1 140253343939456 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:53:54,697 services 1 140253343939456 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:53:54,698 services 1 140253343939456 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:53:54,699 services 1 140253343939456 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:53:54,700 services 1 140253343939456 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:54:01,945 services 1 140052773346176 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:54:01,946 services 1 140052773346176 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:54:01,948 services 1 140052773346176 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:54:01,948 services 1 140052773346176 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:54:01,949 services 1 140052773346176 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:54:09,490 services 1 139950121126784 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:54:09,492 services 1 139950121126784 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:54:09,493 services 1 139950121126784 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:54:09,495 services 1 139950121126784 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:54:09,500 services 1 139950121126784 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:54:17,709 services 1 140332476935040 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:54:17,716 services 1 140332476935040 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:54:17,726 services 1 140332476935040 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:54:17,729 services 1 140332476935040 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:54:17,730 services 1 140332476935040 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:54:27,055 services 1 139718212836224 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:54:27,055 services 1 139718212836224 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:54:27,057 services 1 139718212836224 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:54:27,058 services 1 139718212836224 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:54:27,058 services 1 139718212836224 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:54:39,511 services 1 140715713059712 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:54:39,512 services 1 140715713059712 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:54:39,514 services 1 140715713059712 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:54:39,515 services 1 140715713059712 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:54:39,516 services 1 140715713059712 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:56:14,468 services 1 140423887698816 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:56:14,469 services 1 140423887698816 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:56:14,474 services 1 140423887698816 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:56:14,476 services 1 140423887698816 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:56:14,476 services 1 140423887698816 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:56:14,763 services 1 140507652664192 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:56:14,763 services 1 140507652664192 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:56:14,770 services 1 140507652664192 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:56:14,773 services 1 140507652664192 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:56:14,774 services 1 140507652664192 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:56:25,633 services 1 140507146636160 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:56:25,634 services 1 140507146636160 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:56:25,636 services 1 140507146636160 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:56:25,636 services 1 140507146636160 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:56:25,637 services 1 140507146636160 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:56:34,452 services 1 140154611460992 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:56:34,453 services 1 140154611460992 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:56:34,455 services 1 140154611460992 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:56:34,456 services 1 140154611460992 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:56:34,457 services 1 140154611460992 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:56:43,246 services 1 140041722026880 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:56:43,247 services 1 140041722026880 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:56:43,255 services 1 140041722026880 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:56:43,271 services 1 140041722026880 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:56:43,272 services 1 140041722026880 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:56:51,063 services 1 140175431125888 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:56:51,065 services 1 140175431125888 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:56:51,067 services 1 140175431125888 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:56:51,067 services 1 140175431125888 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:56:51,068 services 1 140175431125888 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:57:01,579 services 1 139928823331712 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:57:01,581 services 1 139928823331712 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:57:01,584 services 1 139928823331712 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:57:01,586 services 1 139928823331712 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:57:01,587 services 1 139928823331712 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:57:11,564 services 1 139922926979968 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:57:11,565 services 1 139922926979968 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:57:11,567 services 1 139922926979968 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:57:11,568 services 1 139922926979968 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:57:11,569 services 1 139922926979968 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:57:22,449 services 1 140396799359872 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:57:22,450 services 1 140396799359872 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:57:22,456 services 1 140396799359872 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:57:22,457 services 1 140396799359872 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:57:22,457 services 1 140396799359872 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:57:33,493 services 1 139767860972416 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:57:33,494 services 1 139767860972416 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:57:33,496 services 1 139767860972416 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:57:33,498 services 1 139767860972416 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:57:33,500 services 1 139767860972416 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:57:49,779 services 1 140351746648960 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:57:49,780 services 1 140351746648960 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:57:49,782 services 1 140351746648960 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:57:49,783 services 1 140351746648960 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:57:49,788 services 1 140351746648960 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:57:56,902 services 1 140524281674624 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:57:56,904 services 1 140524281674624 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:57:56,908 services 1 140524281674624 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:57:56,908 services 1 140524281674624 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:57:56,909 services 1 140524281674624 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:58:43,004 services 1 140323424836480 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:58:43,005 services 1 140323424836480 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:58:43,008 services 1 140323424836480 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:58:43,009 services 1 140323424836480 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:58:43,009 services 1 140323424836480 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:58:43,163 services 1 140367256238976 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:58:43,164 services 1 140367256238976 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:58:43,170 services 1 140367256238976 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:58:43,170 services 1 140367256238976 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:58:43,174 services 1 140367256238976 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:58:55,139 services 1 140693629885312 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:58:55,150 services 1 140693629885312 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:58:55,153 services 1 140693629885312 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:58:55,160 services 1 140693629885312 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:58:55,162 services 1 140693629885312 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:59:06,991 services 1 140487108393856 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:59:06,991 services 1 140487108393856 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:59:06,993 services 1 140487108393856 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:59:06,994 services 1 140487108393856 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:59:06,995 services 1 140487108393856 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:59:14,773 services 1 139701652482944 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:59:14,776 services 1 139701652482944 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:59:14,779 services 1 139701652482944 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:59:14,780 services 1 139701652482944 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:59:14,780 services 1 139701652482944 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:59:24,560 services 1 139706506435456 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:59:24,561 services 1 139706506435456 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:59:24,563 services 1 139706506435456 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:59:24,563 services 1 139706506435456 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:59:24,564 services 1 139706506435456 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:59:33,511 services 1 140182534273920 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:59:33,512 services 1 140182534273920 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:59:33,514 services 1 140182534273920 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:59:33,514 services 1 140182534273920 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:59:33,515 services 1 140182534273920 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:59:42,327 services 1 139919875636096 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:59:42,327 services 1 139919875636096 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:59:42,329 services 1 139919875636096 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:59:42,329 services 1 139919875636096 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:59:42,330 services 1 139919875636096 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 09:59:52,000 services 1 140155841231744 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 09:59:52,001 services 1 140155841231744 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 09:59:52,002 services 1 140155841231744 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 09:59:52,003 services 1 140155841231744 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 09:59:52,004 services 1 140155841231744 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:00:08,876 services 1 140681306385280 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:00:08,878 services 1 140681306385280 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:00:08,890 services 1 140681306385280 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:00:08,891 services 1 140681306385280 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:00:08,891 services 1 140681306385280 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:00:16,416 services 1 140167461788544 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:00:16,417 services 1 140167461788544 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:00:16,419 services 1 140167461788544 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:00:16,421 services 1 140167461788544 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:00:16,423 services 1 140167461788544 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:00:24,460 services 1 140041002658688 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:00:24,463 services 1 140041002658688 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:00:24,471 services 1 140041002658688 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:00:24,477 services 1 140041002658688 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:00:24,480 services 1 140041002658688 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:00:34,089 services 1 139847679916928 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:00:34,090 services 1 139847679916928 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:00:34,093 services 1 139847679916928 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:00:34,094 services 1 139847679916928 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:00:34,096 services 1 139847679916928 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:00:42,604 services 1 139675781905280 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:00:42,605 services 1 139675781905280 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:00:42,607 services 1 139675781905280 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:00:42,609 services 1 139675781905280 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:00:42,612 services 1 139675781905280 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:00:50,479 services 1 139981914012544 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:00:50,480 services 1 139981914012544 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:00:50,481 services 1 139981914012544 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:00:50,482 services 1 139981914012544 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:00:50,482 services 1 139981914012544 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:01:02,291 services 1 139925704256384 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:01:02,293 services 1 139925704256384 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:01:02,294 services 1 139925704256384 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:01:02,295 services 1 139925704256384 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:01:02,296 services 1 139925704256384 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:01:15,085 services 1 140506478287744 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:01:15,085 services 1 140506478287744 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:01:15,087 services 1 140506478287744 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:01:15,088 services 1 140506478287744 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:01:15,089 services 1 140506478287744 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:01:41,287 services 1 140577635916672 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:01:41,288 services 1 140577635916672 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:01:41,308 services 1 140577635916672 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:01:41,320 services 1 140577635916672 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:01:41,321 services 1 140577635916672 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:01:56,532 services 1 140719373261696 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:01:56,533 services 1 140719373261696 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:01:56,535 services 1 140719373261696 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:01:56,536 services 1 140719373261696 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:01:56,537 services 1 140719373261696 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:02:11,428 services 1 139993514097536 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:02:11,436 services 1 139993514097536 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:02:11,438 services 1 139993514097536 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:02:11,440 services 1 139993514097536 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:02:11,442 services 1 139993514097536 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:02:31,565 services 1 140378547334016 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:02:31,566 services 1 140378547334016 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:02:31,567 services 1 140378547334016 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:02:31,568 services 1 140378547334016 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:02:31,569 services 1 140378547334016 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:02:49,062 services 1 139758366452608 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:02:49,064 services 1 139758366452608 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:02:49,068 services 1 139758366452608 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:02:49,070 services 1 139758366452608 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:02:49,071 services 1 139758366452608 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:02:58,903 services 1 139750254406528 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:02:58,904 services 1 139750254406528 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:02:58,906 services 1 139750254406528 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:02:58,907 services 1 139750254406528 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:02:58,907 services 1 139750254406528 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:03:10,549 services 1 140477717560192 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:03:10,550 services 1 140477717560192 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:03:10,551 services 1 140477717560192 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:03:10,561 services 1 140477717560192 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:03:10,561 services 1 140477717560192 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:03:18,829 services 1 140547449097088 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:03:18,830 services 1 140547449097088 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:03:18,831 services 1 140547449097088 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:03:18,832 services 1 140547449097088 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:03:18,833 services 1 140547449097088 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:03:27,326 services 1 139685555665792 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:03:27,327 services 1 139685555665792 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:03:27,329 services 1 139685555665792 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:03:27,330 services 1 139685555665792 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:03:27,331 services 1 139685555665792 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:03:39,231 services 1 140489344195456 ✅ OpenAI service initialized successfully
+WARNING 2025-07-07 10:03:39,256 services 1 140489344195456 ⚠️ Anthropic initialization failed: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-07-07 10:03:39,263 services 1 140489344195456 🎯 Using OpenAI as default AI service
+INFO 2025-07-07 10:03:39,289 services 1 140489344195456 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:03:39,298 services 1 140489344195456 📊 AI Service Status: {'openai': True, 'anthropic': False, 'mock': True, 'default': 'openai'}
+INFO 2025-07-07 10:21:14,686 services 1 140197363223424 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:21:14,815 services 1 140197363223424 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:21:14,816 services 1 140197363223424 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:21:14,819 services 1 140197363223424 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:21:14,820 services 1 140197363223424 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:21:22,077 services 1 140023761595264 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:21:22,443 services 1 140023761595264 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:21:22,464 services 1 140023761595264 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:21:22,466 services 1 140023761595264 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:21:22,467 services 1 140023761595264 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:21:34,021 services 1 140713414695808 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:21:34,125 services 1 140713414695808 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:21:34,126 services 1 140713414695808 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:21:34,128 services 1 140713414695808 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:21:34,129 services 1 140713414695808 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:21:40,172 services 1 140641982290816 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:21:40,243 services 1 140641982290816 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:21:40,244 services 1 140641982290816 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:21:40,244 services 1 140641982290816 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:21:40,245 services 1 140641982290816 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:21:48,868 services 1 140094372555648 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:21:48,918 services 1 140094372555648 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:21:48,919 services 1 140094372555648 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:21:48,919 services 1 140094372555648 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:21:48,920 services 1 140094372555648 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:21:56,857 services 1 140282394028928 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:21:56,909 services 1 140282394028928 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:21:56,910 services 1 140282394028928 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:21:56,911 services 1 140282394028928 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:21:56,911 services 1 140282394028928 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:22:05,887 services 1 140215717915520 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:22:05,928 services 1 140215717915520 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:22:05,928 services 1 140215717915520 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:22:05,929 services 1 140215717915520 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:22:05,929 services 1 140215717915520 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}
+INFO 2025-07-07 10:22:18,860 services 1 139954117172096 ✅ OpenAI service initialized successfully
+INFO 2025-07-07 10:22:18,931 services 1 139954117172096 ✅ Anthropic service initialized successfully
+INFO 2025-07-07 10:22:18,932 services 1 139954117172096 🎯 Using Anthropic as default AI service
+INFO 2025-07-07 10:22:18,932 services 1 139954117172096 🚀 AI Tutor Service successfully initialized
+INFO 2025-07-07 10:22:18,933 services 1 139954117172096 📊 AI Service Status: {'openai': True, 'anthropic': True, 'mock': True, 'default': 'anthropic'}

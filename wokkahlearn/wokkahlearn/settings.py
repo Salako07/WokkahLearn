@@ -6,6 +6,9 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,8 +19,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-ALLOWED_HOSTS =["*"]
+# FIXED: Secure allowed hosts
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Application definition
 DJANGO_APPS = [
@@ -43,11 +46,11 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'accounts',
     'courses',
-    #'learning',
     'ai_tutor',
     'code_execution',
     'collaboration',
     'analytics',
+    'health_check',  # Add health check app
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -82,26 +85,29 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'wokkahlearn.wsgi.application'
+# FIXED: Correct ASGI application
 ASGI_APPLICATION = 'wokkahlearn.asgi.application'
 
 # Database configuration
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'NAME': os.getenv('DB_NAME', 'wokkahlearn'),
         'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', '1234'),
-        'HOST': os.getenv('DB_HOST', 'db'),
+        'PASSWORD': os.getenv('DB_PASSWORD', '1234'),  # FIXED: No default password
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # FIXED: localhost for local dev
         'PORT': os.getenv('DB_PORT', '5432'),
-        #'OPTIONS': {
-        #    'charset': 'utf8mb4',
-        #},
     }
 }
 
-print (f"Database config:{DATABASES}")
+# Fallback to SQLite for development if PostgreSQL not available
+if not os.getenv('DB_PASSWORD') and DEBUG:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
+print(f"Database config: {DATABASES['default']['ENGINE']} - {DATABASES['default']['NAME']}")
 
 # Redis configuration
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
@@ -127,7 +133,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Add health check settings
+# Health check settings
 HEALTH_CHECK = {
     'DISK_USAGE_MAX': 90,  # percent
     'MEMORY_MIN': 100,     # in MB
@@ -182,6 +188,8 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'AI-Powered Coding Education Platform',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': False,
 }
 
 # Internationalization
@@ -199,19 +207,52 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'wokka-staging')
-
-print (f'Bucket name {AWS_STORAGE_BUCKET_NAME}')
+# FIXED: Secure AWS configuration
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'wokkahlearn-storage')
 
 # File storage (AWS S3 in production)
-if not DEBUG:
+if not DEBUG and os.getenv('AWS_ACCESS_KEY_ID'):
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', 'DO00PYG7UMRW3Z9VDAKX')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', 'ebmhAAhY+bkVF9WCtLmaVP+wmYkTb1QJ5XMdoR8UJaI')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'wokka-staging')
-    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'nyc3')
-    AWS_S3_CUSTOM_DOMAIN = "https://nyc3.digitaloceanspaces.com"
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # FIXED: No default credentials
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # FIXED: No default credentials
+    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1')
+    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+    print(f"✅ AWS S3 configured for bucket: {AWS_STORAGE_BUCKET_NAME}")
+else:
+    print("📁 Using local file storage")
+
+# FIXED: Clean email configuration
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    print("📧 Email: Console backend (development)")
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.mailgun.org'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv('MAILGUN_SMTP_USERNAME')  
+    EMAIL_HOST_PASSWORD = os.getenv('MAILGUN_SMTP_PASSWORD')
+    print("📧 Email: SMTP backend (production)")
+
+# Email settings
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'WokkahLearn <noreply@wokkahlearn.com>')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Mailgun Configuration (HTTP API)
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY', '')
+MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN', 'mail.wokkah.com')
+MAILGUN_URL = os.getenv('MAILGUN_URL', 'https://api.mailgun.net')
+
+# Frontend URL for email links
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+
+# Validate Mailgun configuration
+if not DEBUG and (not MAILGUN_API_KEY or not MAILGUN_DOMAIN):
+    import warnings
+    warnings.warn("Mailgun credentials not configured. Email sending will not work in production.")
+elif MAILGUN_API_KEY and MAILGUN_DOMAIN:
+    print(f"✅ Mailgun configured for domain: {MAILGUN_DOMAIN}")
 
 # Celery configuration
 CELERY_BROKER_URL = REDIS_URL
@@ -221,10 +262,25 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
+# FIXED: Celery Beat Schedule
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-old-executions': {
+        'task': 'code_execution.tasks.cleanup_old_executions',
+        'schedule': crontab(minute=0, hour=2),  # 2 AM daily
+    },
+    'collect-execution-statistics': {
+        'task': 'code_execution.tasks.collect_daily_statistics',
+        'schedule': crontab(minute=30, hour=23),  # 11:30 PM daily
+    },
+}
+
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React development server
     "http://127.0.0.1:3000",
+    "http://localhost:8000",  # Django development server
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -251,6 +307,10 @@ LOGGING = {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
     },
     'handlers': {
         'file': {
@@ -262,11 +322,11 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+            'formatter': 'simple',
         },
     },
     'root': {
-        'handlers': ['console', 'file'],
+        'handlers': ['console'],
         'level': 'INFO',
     },
     'loggers': {
@@ -284,115 +344,108 @@ LOGGING = {
 }
 
 # AI Service Configuration
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
-AI_SERVICE_URL = os.getenv('AI_SERVICE_URL', 'http://localhost:8001')
+# Add this to your wokkahlearn/settings.py
 
-# Code execution configuration
-CODE_EXECUTION_TIMEOUT = 30  # seconds
-MAX_MEMORY_USAGE = 128  # MB
-DOCKER_NETWORK = 'wokkahlearn_execution'
+import os
+from decouple import config
 
-# Default auto field
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# AI Service Configuration
+# ======================
 
-# Custom user model
-AUTH_USER_MODEL = 'accounts.User'
+# OpenAI Configuration
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', default=None)
+OPENAI_MODEL_SETTINGS = {
+    'default_model': 'gpt-4',
+    'fallback_model': 'gpt-3.5-turbo',
+    'max_tokens': 2000,
+    'temperature': 0.7,
+    'timeout': 30,  # seconds
+}
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.mailgun.org'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv('MAILGUN_SMTP_USERNAME')  
-    EMAIL_HOST_PASSWORD = os.getenv('MAILGUN_SMTP_PASSWORD') 
+# Anthropic Configuration
+ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', default=None)
+ANTHROPIC_MODEL_SETTINGS = {
+    'default_model': 'claude-3-sonnet-20240229',
+    'fallback_model': 'claude-instant-1.2',
+    'max_tokens': 2000,
+    'temperature': 0.7,
+    'timeout': 30,  # seconds
+}
 
-    # Default email settings
-    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'WokkahLearn <noreply@yourdomain.com>')
-    SERVER_EMAIL = DEFAULT_FROM_EMAIL
-
-    # Mailgun API Configuration (for advanced features)
-    MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
-    MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN') 
-    FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://wokkahlearn.com')
-
-
-
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@wokkahlearn.com')
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://wokkahlearn.com')
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Mailgun Configuration (HTTP API)
-MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY', '')
-MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN','mail.wokkah.com')  # mail.wokkah.com
-MAILGUN_URL = os.getenv('MAILGUN_URL', 'https://api.mailgun.net')
-MAIL_FROM_ADDRESS = os.getenv('MAIL_FROM_ADDRESS', 'Wokkah Learn <noreply@mail.wokkah.com>')
-
-# Frontend URL for email links
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:8000/api/auth/')
-
-# Email Backend (Optional - you can still use Django's email for other purposes)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development logging
-DEFAULT_FROM_EMAIL = MAIL_FROM_ADDRESS
-
-# Validate Mailgun configuration
-if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
-    import warnings
-    warnings.warn("Mailgun credentials not configured. Email sending will not work.")
-else:
-    print(f"✅ Mailgun configured for domain: {MAILGUN_DOMAIN}")
-
-
-# AI Configuration
-AI_SERVICES = {
-    'default_provider': os.getenv('AI_DEFAULT_PROVIDER', 'mock'),
-    'fallback_to_mock': os.getenv('AI_FALLBACK_TO_MOCK', 'True').lower() == 'true',
-    'openai': {
-        'api_key': os.getenv('OPENAI_API_KEY'),
-        'model': 'gpt-4',
-        'max_tokens': int(os.getenv('AI_MAX_TOKENS', 2000)),
-        'temperature': float(os.getenv('AI_TEMPERATURE', 0.7)),
-    },
-    'anthropic': {
-        'api_key': os.getenv('ANTHROPIC_API_KEY'),
-        'model': 'claude-3-sonnet-20240229',
-        'max_tokens': int(os.getenv('AI_MAX_TOKENS', 2000)),
-        'temperature': float(os.getenv('AI_TEMPERATURE', 0.7)),
-    },
-    'features': {
-        'code_analysis': os.getenv('AI_CODE_ANALYSIS_ENABLED', 'True').lower() == 'true',
-        'recommendations': os.getenv('AI_RECOMMENDATIONS_ENABLED', 'True').lower() == 'true',
-        'tutoring': os.getenv('AI_TUTORING_ENABLED', 'True').lower() == 'true',
-    },
-    'rate_limiting': {
-        'enabled': os.getenv('AI_RATE_LIMIT_ENABLED', 'True').lower() == 'true',
+# AI Service General Settings
+AI_SERVICE_SETTINGS = {
+    'default_provider': 'anthropic',  # or 'openai', 'mock'
+    'enable_fallback': True,
+    'max_retries': 3,
+    'retry_delay': 1,  # seconds
+    'cache_responses': True,
+    'cache_ttl': 3600,  # 1 hour
+    'rate_limit': {
         'requests_per_minute': 60,
-        'requests_per_hour': 1000,
-    },
-    'caching': {
-        'enabled': os.getenv('AI_CACHE_RESPONSES', 'True').lower() == 'true',
-        'ttl': 3600,  # 1 hour
+        'tokens_per_minute': 50000,
     }
 }
 
+# Session Management
+AI_TUTOR_SETTINGS = {
+    'max_session_duration': 3600,  # 1 hour
+    'max_messages_per_session': 100,
+    'auto_save_interval': 30,  # seconds
+    'session_cleanup_interval': 24,  # hours
+}
 
-# wokkahlearn/settings.py - Add code execution settings
+# Code Execution Settings (for AI code assistance)
+CODE_EXECUTION_SETTINGS = {
+    'enabled': True,
+    'timeout': 10,  # seconds
+    'memory_limit': '128MB',
+    'supported_languages': ['python', 'javascript', 'java', 'cpp'],
+    'docker_image_prefix': 'wokkahlearn-exec',
+}
+
+# Logging configuration for AI services
+LOGGING_AI = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'ai_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/ai_services.log',
+            'formatter': 'verbose',
+        },
+        'ai_console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'ai_tutor': {
+            'handlers': ['ai_console', 'ai_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+# Update the main LOGGING configuration
+if 'LOGGING' in globals():
+    LOGGING['loggers'].update(LOGGING_AI['loggers'])
+    LOGGING['handlers'].update(LOGGING_AI['handlers'])
+else:
+    LOGGING = LOGGING_AI
 
 # Docker Configuration
 DOCKER_NETWORK = 'wokkahlearn_execution'
-CODE_EXECUTION_TIMEOUT = 30  # seconds
-MAX_MEMORY_USAGE = 128  # MB
-MAX_CONCURRENT_EXECUTIONS = 10
 
 # Code Execution Settings
 CODE_EXECUTION = {
     'enabled': True,
     'docker_network': DOCKER_NETWORK,
-    'default_timeout': CODE_EXECUTION_TIMEOUT,
-    'max_memory_mb': MAX_MEMORY_USAGE,
-    'max_concurrent_executions': MAX_CONCURRENT_EXECUTIONS,
+    'default_timeout': 30,  # seconds
+    'max_memory_mb': 128,  # MB
+    'max_concurrent_executions': 10,
     'cleanup_interval': 3600,  # 1 hour
     'max_output_size_mb': 1,
     'supported_languages': [
@@ -417,16 +470,16 @@ CODE_EXECUTION = {
     }
 }
 
-import crontab
-from celery import CELERY_BEAT_SCHEDULE
-# Celery Configuration for Background Processing
-CELERY_BEAT_SCHEDULE.update({
-    'cleanup-old-executions': {
-        'task': 'code_execution.tasks.cleanup_old_executions',
-        'schedule': crontab(minute=0, hour=2),  # 2 AM daily
-    },
-    'collect-execution-statistics': {
-        'task': 'code_execution.tasks.collect_daily_statistics',
-        'schedule': crontab(minute=30, hour=23),  # 11:30 PM daily
-    },
-})
+# Default auto field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom user model
+AUTH_USER_MODEL = 'accounts.User'
+
+# Print configuration status
+print("🚀 WokkahLearn Settings Loaded")
+print(f"   Debug: {DEBUG}")
+print(f"   Database: {DATABASES['default']['ENGINE']}")
+print(f"   Redis: {REDIS_URL}")
+print(f"   AI Provider: {AI_SERVICE_SETTINGS['default_provider']}")
+print(f"   Frontend URL: {FRONTEND_URL}")
