@@ -44,9 +44,38 @@ class CodeExecutionAdmin(admin.ModelAdmin):
 
 @admin.register(TestCase)
 class TestCaseAdmin(admin.ModelAdmin):
-    list_display = ('exercise', 'name', 'test_type', 'difficulty', 'points', 'is_hidden', 'is_required')
-    list_filter = ('test_type', 'difficulty', 'is_hidden', 'is_required')
+    # Fixed: Using actual model fields instead of non-existent ones
+    list_display = ('exercise', 'name', 'test_type', 'points', 'is_public', 'is_sample', 'is_active')
+    list_filter = ('test_type', 'is_public', 'is_sample', 'is_active')
     search_fields = ('exercise__title', 'name', 'description')
-
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('exercise', 'name', 'description', 'test_type')
+        }),
+        ('Test Data', {
+            'fields': ('input_data', 'expected_output', 'expected_error', 'expected_exit_code')
+        }),
+        ('Constraints', {
+            'fields': ('timeout_seconds', 'max_memory_mb')
+        }),
+        ('Visibility & Grading', {
+            'fields': ('is_public', 'is_sample', 'weight', 'points')
+        }),
+        ('Output Matching', {
+            'fields': ('strict_output_matching', 'ignore_whitespace', 'ignore_case', 'custom_checker')
+        }),
+        ('Order & Status', {
+            'fields': ('order', 'is_active')
+        }),
+    )
+    
+    readonly_fields = ('created_at', 'updated_at')
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(self.readonly_fields)
+        if obj:  # Editing existing test case
+            readonly.append('exercise')  # Don't allow changing exercise after creation
+        return readonly
 
 

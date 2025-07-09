@@ -207,18 +207,43 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# FIXED: Secure AWS configuration
+#  Secure AWS configuration
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'wokkahlearn-storage')
 
-# File storage (AWS S3 in production)
-if not DEBUG and os.getenv('AWS_ACCESS_KEY_ID'):
+# DigitalOcean Spaces Configuration (S3-Compatible)
+DO_SPACES_ENABLED = os.getenv('DO_SPACES_ENABLED', 'False').lower() == 'true'
+
+if not DEBUG and DO_SPACES_ENABLED and os.getenv('AWS_ACCESS_KEY_ID'):
+    # DigitalOcean Spaces configuration
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # FIXED: No default credentials
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # FIXED: No default credentials
-    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1')
-    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
-    print(f"✅ AWS S3 configured for bucket: {AWS_STORAGE_BUCKET_NAME}")
+    
+    # DigitalOcean Spaces credentials
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY') 
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'wokka-staging')
+    
+    # CORRECTED: DigitalOcean Spaces specific settings
+    AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com'
+    
+    # Important: DigitalOcean Spaces settings
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_USE_SSL = True
+    AWS_S3_VERIFY = True
+    
+    # CRITICAL: DigitalOcean Spaces doesn't support some AWS S3 features
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    AWS_S3_REGION_NAME = 'nyc3'  # Use the region, not a custom region name
+    
+    print(f"✅ DigitalOcean Spaces configured for bucket: {AWS_STORAGE_BUCKET_NAME}")
+    print(f"🌐 Endpoint: {AWS_S3_ENDPOINT_URL}")
+    print(f"🔗 Custom Domain: {AWS_S3_CUSTOM_DOMAIN}")
 else:
     print("📁 Using local file storage")
 

@@ -1,6 +1,11 @@
 docker-compose.accounts.yml
 docker-compose.development.yml
 .env
+.cert
+cert.pem
+key.pem
+stup-letsencrypt.sh
+migrations/
 folder_structure
 .env.accounts
 .env.development

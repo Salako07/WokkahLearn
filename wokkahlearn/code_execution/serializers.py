@@ -111,25 +111,24 @@ class CreateCodeExecutionSerializer(serializers.ModelSerializer):
         return value
 
 
+
 class TestCaseSerializer(serializers.ModelSerializer):
     """Serializer for test cases"""
     
     exercise_title = serializers.CharField(source='exercise.title', read_only=True)
     test_type_display = serializers.CharField(source='get_test_type_display', read_only=True)
-    difficulty_display = serializers.CharField(source='get_difficulty_display', read_only=True)
     
     class Meta:
         model = TestCase
         fields = [
             'id', 'exercise', 'exercise_title', 'name', 'description',
             'test_type', 'test_type_display', 'input_data', 'expected_output',
-            'setup_code', 'teardown_code', 'timeout_override', 'memory_limit_override',
-            'difficulty', 'difficulty_display', 'points', 'order', 'is_hidden',
-            'is_required', 'is_public', 'hints', 'explanation', 'tags',
-            'created_at', 'updated_at'
+            'expected_error', 'expected_exit_code', 'timeout_seconds', 'max_memory_mb',
+            'is_public', 'is_sample', 'weight', 'points', 'order',
+            'strict_output_matching', 'ignore_whitespace', 'ignore_case', 
+            'custom_checker', 'is_active', 'created_at', 'updated_at'
         ]
         read_only_fields = ['created_at', 'updated_at']
-
 
 class TestResultSerializer(serializers.ModelSerializer):
     """Serializer for test results"""

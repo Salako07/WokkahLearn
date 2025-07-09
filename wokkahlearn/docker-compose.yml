@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   # PostgreSQL Database
   db:
@@ -19,7 +21,7 @@ services:
     networks:
       - wokkahlearn_network
 
-  # Redis
+  # Redis Cache
   redis:
     image: redis:7-alpine
     restart: unless-stopped
@@ -36,257 +38,215 @@ services:
     networks:
       - wokkahlearn_network
 
-  # Code Execution Environment (Docker-in-Docker)
-  code_executor:
-    image: docker:24-dind
-    restart: unless-stopped
-    privileged: true
-    environment:
-      - DOCKER_TLS_CERTDIR=  # Disable TLS for internal network
-      - DOCKER_HOST=tcp://0.0.0.0:2375
-    volumes:
-      - code_execution_data:/var/lib/docker
-    networks:
-      - code_execution_network
-    ports:
-      - "2375:2375"  # Expose Docker daemon port
-    healthcheck:
-      test: ["CMD", "docker", "version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    command: >
-      sh -c "
-        echo 'Starting Docker daemon...' &&
-        dockerd --host=tcp://0.0.0.0:2375 --tls=false &
-        echo 'Waiting for Docker daemon to start...' &&
-        sleep 10 &&
-        echo 'Pulling required images...' &&
-        docker pull python:3.11-alpine &&
-        docker pull node:18-alpine &&
-        docker pull openjdk:17-alpine &&
-        echo 'Code execution environment ready!' &&
-        tail -f /dev/null
-      "
-
-  # Django Backend with ASGI Support
+  # Django Backend (using host Docker for code execution)
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
-      - DEBUG=${DEBUG:-False}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - DEBUG=${DEBUG:-True}
+      - SECRET_KEY=${SECRET_KEY:-wokkahlearn-dev-secret-key-change-in-production}
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-1234}@db:5432/${DB_NAME:-wokkahlearn}
       - REDIS_URL=redis://:${REDIS_PASSWORD:-redis123}@redis:6379/0
-      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,nginx,0.0.0.0,${DOMAIN:-wokkahlearn.com}
-      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,https://${DOMAIN:-wokkahlearn.com}
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,nginx,wokkahlearn.com,www.wokkahlearn.com,${DOMAIN:-wokkahlearn.com}
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,https://localhost,https://${DOMAIN:-wokkahlearn.com}
+      
+      # Security settings (relaxed for development)
+      - SECURE_SSL_REDIRECT=False
+      - SESSION_COOKIE_SECURE=False
+      - CSRF_COOKIE_SECURE=False
+      - SECURE_HSTS_SECONDS=0
+      
       # AI Service Configuration
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - AI_DEFAULT_PROVIDER=${AI_DEFAULT_PROVIDER:-mock}
       - AI_RATE_LIMIT_ENABLED=${AI_RATE_LIMIT_ENABLED:-True}
       - AI_CACHE_RESPONSES=${AI_CACHE_RESPONSES:-True}
-      # Code Execution Configuration
+      
+      # Code Execution Configuration (HOST DOCKER)
       - CODE_EXECUTION_ENABLED=True
-      - DOCKER_HOST=tcp://code_executor:2375
-      - DOCKER_TLS_VERIFY=0
-      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_HOST=unix:///var/run/docker.sock
       - CODE_EXECUTION_TIMEOUT=30
       - MAX_MEMORY_USAGE=128
+      - CODE_EXECUTION_NETWORK=wokkahlearn_execution
+      
       # Email Configuration
       - EMAIL_BACKEND=${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
-      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
-      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
+      - MAILGUN_API_KEY=${MAILGUN_API_KEY:-}
+      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN:-mail.wokkah.com}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-WokkahLearn <noreply@wokkahlearn.com>}
-      # File Storage
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
-      - AWS_S3_REGION_NAME=${AWS_S3_REGION_NAME:-us-east-1}
+      
+      # File Storage (disabled for now)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME:-}
+      - DO_SPACES_ENDPOINT=${DO_SPACES_ENDPOINT:-}
+      - UPLOAD_PROVIDER=${UPLOAD_PROVIDER:-local}
+      
     volumes:
       - .:/app
       - media_files:/app/media
       - static_files:/app/staticfiles
-      - docker_certs:/certs/client:ro
-    expose:
-      - "8000"
+      # HOST DOCKER ACCESS
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
+    ports:
+      - "8000:8000"  
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-      code_executor:
-        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/admin/"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 120s
     networks:
       - wokkahlearn_network
-      - code_execution_network
+      - wokkahlearn_execution  # For code execution containers
     command: >
       bash -c "
-        echo 'Waiting for database...' &&
-        while ! nc -z db 5432; do sleep 0.1; done &&
-        echo 'Database is ready!' &&
-        echo 'Waiting for code executor...' &&
-        while ! nc -z code_executor 2376; do sleep 0.1; done &&
-        echo 'Code executor is ready!' &&
+        echo '🚀 Starting WokkahLearn Backend...' &&
+        echo 'Waiting for dependencies...' &&
+        while ! nc -z db 5432; do sleep 1; done &&
+        while ! nc -z redis 6379; do sleep 1; done &&
+        echo 'Dependencies ready!' &&
+        
+        echo 'Testing Docker access...' &&
+        if docker version >/dev/null 2>&1; then
+          echo '✅ Docker access confirmed - Code execution will work'
+          echo 'Creating code execution network...'
+          docker network create wokkahlearn_execution --driver bridge 2>/dev/null || echo 'Network already exists'
+        else
+          echo '⚠️  Docker not accessible - Code execution will be limited'
+        fi &&
+        
         echo 'Making migrations...' &&
         python manage.py makemigrations &&
+        
         echo 'Running migrations...' &&
-        python manage.py migrate &&
-        echo 'Creating superuser if not exists...' &&
-        python manage.py shell -c \"
-        from django.contrib.auth import get_user_model;
-        User = get_user_model();
-        if not User.objects.filter(email='admin@wokkahlearn.com').exists():
-            User.objects.create_superuser('admin@wokkahlearn.com', 'admin123')
-            print('Superuser created: admin@wokkahlearn.com / admin123')
-        \" || true &&
+        python manage.py migrate --noinput &&
+        python manage.py migrate django_celery_beat --noinput &&
+        
+        echo 'Creating superuser...' &&
+        python create_superuser.py &&
         echo 'Collecting static files...' &&
         python manage.py collectstatic --noinput &&
-        echo 'Starting ASGI server with Daphne...' &&
-        daphne -b 0.0.0.0 -p 8000 wokkahlearn.asgi:application
+        
+        echo 'Starting Django development server...' &&
+        echo '📡 Backend will be available at: http://localhost:8000' &&
+        echo '🔧 Admin panel: http://localhost:8000/admin/' &&
+        echo '📚 API docs: http://localhost:8000/api/schema/swagger-ui/' &&
+        python manage.py runserver 0.0.0.0:8000
       "
 
-  # Nginx Reverse Proxy with WebSocket Support
-  nginx:
-    build:
-      context: nginx
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - static_files:/var/www/static:ro
-      - media_files:/var/www/media:ro
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro  # For SSL certificates
-    depends_on:
-      backend:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/api/health/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - wokkahlearn_network
 
-  # Celery Worker (for background tasks)
+  # Celery Worker (Background Tasks)
   celery_worker:
     build:
       context: .
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
-      - DEBUG=${DEBUG:-False}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - DEBUG=${DEBUG:-True}
+      - SECRET_KEY=${SECRET_KEY:-wokkahlearn-dev-secret-key-change-in-production}
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-1234}@db:5432/${DB_NAME:-wokkahlearn}
       - REDIS_URL=redis://:${REDIS_PASSWORD:-redis123}@redis:6379/0
-      # AI Service Configuration
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - AI_DEFAULT_PROVIDER=${AI_DEFAULT_PROVIDER:-mock}
-      # Email Configuration
-      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
-      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
-      # File Storage
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+      - CODE_EXECUTION_ENABLED=True
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
     volumes:
       - .:/app
       - media_files:/app/media
-      - docker_certs:/certs/client:ro
+      # HOST DOCKER ACCESS for code execution tasks
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
     depends_on:
-      db:
+      backend:
         condition: service_healthy
-      redis:
-        condition: service_healthy
-      code_executor:
-        condition: service_healthy
-    networks:
-      - wokkahlearn_network
-      - code_execution_network
     healthcheck:
       test: ["CMD", "celery", "-A", "wokkahlearn", "inspect", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
+    networks:
+      - wokkahlearn_network
+      - wokkahlearn_execution
     command: >
       bash -c "
-        echo 'Waiting for database and Redis...' &&
-        while ! nc -z db 5432; do sleep 0.1; done &&
-        while ! nc -z redis 6379; do sleep 0.1; done &&
-        echo 'Starting Celery worker...' &&
+        echo '⚙️ Starting Celery Worker...' &&
+        while ! nc -z backend 8000; do sleep 1; done &&
+        echo 'Backend is ready, starting Celery worker...' &&
         celery -A wokkahlearn worker --loglevel=info --concurrency=4
       "
 
-  # Celery Beat (for scheduled tasks)
+  # Celery Beat (Scheduled Tasks)
   celery_beat:
     build:
       context: .
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
-      - DEBUG=${DEBUG:-False}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - DEBUG=${DEBUG:-True}
+      - SECRET_KEY=${SECRET_KEY:-wokkahlearn-dev-secret-key-change-in-production}
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-1234}@db:5432/${DB_NAME:-wokkahlearn}
       - REDIS_URL=redis://:${REDIS_PASSWORD:-redis123}@redis:6379/0
-      # AI Service Configuration
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
     volumes:
       - .:/app
       - celery_beat_data:/app/celerybeat
     depends_on:
-      db:
+      backend:
         condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - wokkahlearn_network
     healthcheck:
       test: ["CMD", "python", "-c", "import os; exit(0 if os.path.exists('/app/celerybeat.pid') else 1)"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
+    networks:
+      - wokkahlearn_network
     command: >
       bash -c "
-        echo 'Waiting for database and Redis...' &&
-        while ! nc -z db 5432; do sleep 0.1; done &&
-        while ! nc -z redis 6379; do sleep 0.1; done &&
-        echo 'Starting Celery beat...' &&
+        echo '📅 Starting Celery Beat...' &&
+        while ! nc -z backend 8000; do sleep 1; done &&
+        echo 'Backend is ready, verifying database tables...' &&
+        python s_celery.py &&
+        echo 'Starting Celery Beat scheduler...' &&
         celery -A wokkahlearn beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
       "
 
-
-
 volumes:
   postgres_data:
+    driver: local
   redis_data:
+    driver: local
   media_files:
+    driver: local
   static_files:
-  docker_certs:
-  code_execution_data:
+    driver: local
   celery_beat_data:
- # frontend_node_modules:
- # prometheus_data:
- # grafana_data:
+    driver: local
 
 networks:
   wokkahlearn_network:
     driver: bridge
-  code_execution_network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  wokkahlearn_execution:
     driver: bridge
-    internal: true  # Isolated network for security
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
